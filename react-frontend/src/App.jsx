@@ -1,6 +1,6 @@
 import './App.css'
 import {useEffect, useState} from "react";
-import {NewToDoForm} from "./NewToDoForm.jsx";
+import {ToDoForm} from "./ToDoForm.jsx";
 import {TodoList} from "./TodoList.jsx";
 
 
@@ -48,7 +48,7 @@ function App() {
       <>
       <h2 className="text-center">To Do List</h2>
       <TodoList todos = {todos} toggleToDo={toggleToDo} deleteToDo={deleteToDo}/>
-      <NewToDoForm onSubmit = {addToDo}/>
+      <ToDoForm onSubmit = {addToDo}/>
       </>
   )
 }
