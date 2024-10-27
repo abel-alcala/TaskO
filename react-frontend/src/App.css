@@ -37,7 +37,7 @@ body {
 .new-item-form input {
   outline: none;
   border: 1px solid hsl(200, 100%, 50%);
-  background: hsl(200, 100%, 30%);
+  background: hsl(200, 50%, 50%, 0.2);
   border-radius: 0.25em;
   padding: 0.5rem;
   color: hsl(200, 100%, 90%);
@@ -52,8 +52,8 @@ body {
   background: hsl(200, 100%, 50%, 0.2);
   border: 1px solid hsl(200, 100%, 50%);
   color: hsl(200, 100%, 90%);
-  padding: 0.5em .5em;
-  border-radius: 0.5em;
+  padding: 0.45em .5em;
+  border-radius: 0.40em;
   cursor: pointer;
 }
 
