@@ -1,34 +1,55 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {useEffect, useState} from "react";
+import {NewToDoForm} from "./NewToDoForm.jsx";
+import {TodoList} from "./TodoList.jsx";
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [todos, setToDos] = useState(() => {
+        const localValue = localStorage.getItem("ITEMS")
+        if (localValue == null) return []
+
+        return JSON.parse(localValue)
+    })
+
+    useEffect(() => {
+        localStorage.setItem("ITEMS", JSON.stringify(todos))
+    }, [todos])
+
+    function addToDo(title) {
+        setToDos(currentToDos => {
+            return [
+                ...currentToDos,
+                {id: crypto.randomUUID(), title: title, completed: false},
+            ]
+        })
+    }
+
+
+    function toggleToDo(id, completed){
+        setToDos(currentToDos => {
+            return currentToDos.map(todos => {
+                if(todos.id === id){
+                    return {...todos, completed}
+                }
+                return todos
+            })
+        })
+    }
+    function deleteToDo(id){
+        setToDos(currentToDos => {
+            return currentToDos.filter(todos => todos.id !== id)
+        })
+    }
+
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <>
+      <h2 className="text-center">To Do List</h2>
+      <TodoList todos = {todos} toggleToDo={toggleToDo} deleteToDo={deleteToDo}/>
+      <NewToDoForm onSubmit = {addToDo}/>
+      </>
   )
 }
 
