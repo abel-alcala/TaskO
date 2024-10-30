@@ -10,6 +10,8 @@ mongoose
   })
   .catch((error) => console.log(error));
 
+
+// some function going to be updated after frontend
 function getUsers(name, job) {
   let promise;
   if (name === undefined && job === undefined) {
@@ -43,6 +45,7 @@ function findUserByJob(job) {
 function findUserbyIdAndDelete(id){
     return userModel.findByIdAndDelete(id);
 }
+
 
 export default {
   addUser,

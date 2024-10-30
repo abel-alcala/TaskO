@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+
+// to be update after frontend finish
 const UserSchema = new mongoose.Schema(
   {
     name: {
