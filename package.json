@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"cd packages/react-frontend && vite\" \"cd packages/express-backend && npx nodemon backend.js\"",
+    "start": "npm run dev"
   },
   "workspaces": [
     "packages/*"
@@ -18,5 +20,8 @@
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.6.0",
     "prettier": "3.3.3"
+  },
+  "dependencies": {
+    "concurrency": "^0.1.4"
   }
 }
