@@ -1,19 +1,17 @@
-import {TodoTask} from "./TodoTask.jsx";
+import { TodoTask } from './TodoTask';
 
-export function TodoList({todos, toggleToDo, deleteToDo}) {
+export function TodoList({ todos, toggleToDo, deleteToDo }) {
     return (
         <ul className="list">
-        {todos.length === 0 && "No Current Tasks"}
-        {todos.map(todos => {
-            return (
+            {todos.length === 0 && "No Current Tasks"}
+            {todos.map(todo => (
                 <TodoTask
-                    {...todos}
-                    key = {todos.id}
+                    {...todo}
+                    key={todo.id}
                     toggleToDo={toggleToDo}
                     deleteToDo={deleteToDo}
                 />
-            )
-        })}
-    </ul>
-    )
+            ))}
+        </ul>
+    );
 }

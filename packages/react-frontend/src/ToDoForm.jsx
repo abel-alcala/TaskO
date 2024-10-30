@@ -1,26 +1,28 @@
-import {useState} from "react";
+import { useState } from 'react';
 
-export function ToDoForm({onSubmit}) {
-    const [newItem,setNewItem] = useState("")
+export function ToDoForm({ onSubmit }) {
+    const [newItem, setNewItem] = useState("");
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (newItem === "") return;
 
-    function handleSubmit(e){
-        e.preventDefault()
-        if(newItem === "") return
-
-        onSubmit(newItem)
-        setNewItem("")
+        onSubmit(newItem);
+        setNewItem("");
     }
-    return <form onSubmit={handleSubmit} className="new-item-form">
-        <div className="form-row">
-            <label htmlFor="item">New Task </label>
-            <input
-                value={newItem}
-                onChange={(e) => setNewItem(e.target.value)}
-                type="text"
-                id="item"/>
-            <button className="btn">Create Task</button>
-        </div>
 
-    </form>
+    return (
+        <form onSubmit={handleSubmit} className="new-item-form">
+            <div className="form-row">
+                <label htmlFor="item">New Task </label>
+                <input
+                    value={newItem}
+                    onChange={(e) => setNewItem(e.target.value)}
+                    type="text"
+                    id="item"
+                />
+                <button className="btn">Create Task</button>
+            </div>
+        </form>
+    );
 }
