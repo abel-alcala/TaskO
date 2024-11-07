@@ -1,0 +1,62 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 350px;
+    background-color: hsl(215, 28%, 17%);
+    color: hsl(200, 100%, 90%);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+/* Sidebar list */
+.sidebar ul {
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin-bottom: 0.5rem;
+}
+
+/* Sidebar input field for new list name*/
+.sidebar input {
+    outline: none;
+    border: 1px solid hsl(214, 15%, 54%);
+    background: hsl(214, 15%, 54%);
+    border-radius: 0.25em;
+    padding: 0.5rem;
+    color: white;
+    flex-grow: 1;
+}
+.sidebar input::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+/* Sidebar list button*/
+.sidebar ul li button {
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1.1em;
+    color: white;
+    background-color: hsl(227, 13%, 26%);
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Sidebar button hover and focus states*/
+.sidebar ul li button:hover,
+.sidebar ul li button:focus {
+    background-color: hsl(218, 26%, 34%);
+}

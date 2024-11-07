@@ -1,46 +1,74 @@
-import './Home.css'
 import React, { useEffect, useState } from 'react';
-import {ToDoForm} from './ToDoForm';
-import {TodoList} from './TodoList';
+import { ToDoForm } from './ToDoForm';
+import { TodoList } from './TodoList';
+import Sidebar from './Sidebar';
+import './Home.css';
 
 const Home = () => {
-    const [todos, setToDos] = useState(() => {
-        const localValue = localStorage.getItem("ITEMS");
-        if (localValue == null) return [];
-        return JSON.parse(localValue);
+    const [lists, setLists] = useState(() => {
+        const savedLists = localStorage.getItem("LISTS");
+        return savedLists ? JSON.parse(savedLists) : { Default: [] };
     });
 
+    const [currentList, setCurrentList] = useState("Default");
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     useEffect(() => {
-        localStorage.setItem("ITEMS", JSON.stringify(todos));
-    }, [todos]);
+        localStorage.setItem("LISTS", JSON.stringify(lists));
+    }, [lists]);
 
     function addToDo(title) {
-        setToDos(currentToDos => [
-            ...currentToDos,
-            { id: crypto.randomUUID(), title, completed: false }
-        ]);
+        setLists(currentLists => ({
+            ...currentLists,
+            [currentList]: [
+                ...currentLists[currentList],
+                { id: crypto.randomUUID(), title, completed: false }
+            ]
+        }));
     }
 
     function toggleToDo(id, completed) {
-        setToDos(currentToDos =>
-            currentToDos.map(todo =>
+        setLists(currentLists => ({
+            ...currentLists,
+            [currentList]: currentLists[currentList].map(todo =>
                 todo.id === id ? { ...todo, completed } : todo
             )
-        );
+        }));
     }
 
     function deleteToDo(id) {
-        setToDos(currentToDos =>
-            currentToDos.filter(todo => todo.id !== id)
-        );
+        setLists(currentLists => ({
+            ...currentLists,
+            [currentList]: currentLists[currentList].filter(todo => todo.id !== id)
+        }));
+    }
+
+    function addList(name) {
+        if (!lists[name]) {
+            setLists(currentLists => ({
+                ...currentLists,
+                [name]: []
+            }));
+            setCurrentList(name);
+        }
     }
 
     return (
-        <>
-            <h2 className="text-center">To Do List</h2>
-            <TodoList todos={todos} toggleToDo={toggleToDo} deleteToDo={deleteToDo} />
+        <div className="container">
+            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="btn">
+                {isSidebarOpen ? "Hide" : "Show"}
+            </button>
+            <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                lists={Object.keys(lists)}
+                addList={addList}
+                setCurrentList={setCurrentList}
+            />
+            <h2 className="text-center">{currentList}</h2>
+            <TodoList todos={lists[currentList]} toggleToDo={toggleToDo} deleteToDo={deleteToDo} />
             <ToDoForm onSubmit={addToDo} />
-        </>
+        </div>
     );
 };
 

@@ -1,10 +1,12 @@
+/* font and box */
 * {
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
 }
 
+/* Main body*/
 body {
-  background: #333;
+  background: hsl(231, 21%, 13%);
   color: hsl(200, 100%, 90%);
   padding: 2rem;
   margin: 0;
@@ -12,13 +14,21 @@ body {
   justify-content: center;
 }
 
+/* Main content container*/
 .container {
   max-width: 600px;
   width: 100%;
   padding: 1rem;
   margin-top: 2rem;
+  transition: margin-left 0.3s ease-in-out;
 }
 
+/* When sidebar is visible, adjust container margin */
+.sidebar.show ~ .container {
+  margin-left: 350px;
+}
+
+/* Header*/
 .header {
   font-size: 2rem;
   font-weight: bold;
@@ -26,6 +36,7 @@ body {
   text-align: center;
 }
 
+/* New item form*/
 .new-item-form {
   display: flex;
   flex-direction: row;
@@ -44,16 +55,18 @@ body {
   flex-grow: 1;
 }
 
+/* Input focus state */
 .new-item-form input:focus {
   border: 1px solid hsl(200, 100%, 70%);
 }
 
+/* Button*/
 .btn {
   background: hsl(200, 100%, 50%, 0.2);
   border: 1px solid hsl(200, 100%, 50%);
   color: hsl(200, 100%, 90%);
-  padding: 0.45em .5em;
-  border-radius: 0.40em;
+  padding: 0.45em 0.5em;
+  border-radius: 0.4em;
   cursor: pointer;
 }
 
@@ -61,6 +74,7 @@ body {
   background: hsl(220, 100%, 40%, 0.4);
 }
 
+/*Task list*/
 .list {
   list-style: none;
   padding: 0;
@@ -69,6 +83,7 @@ body {
   gap: 0.4rem;
 }
 
+/*Checkbox for list items*/
 .list li input[type="checkbox"] {
   appearance: none;
   width: 0;
@@ -78,6 +93,7 @@ body {
   pointer-events: none;
 }
 
+/* Task list item */
 .list li {
   display: flex;
   align-items: center;
@@ -86,6 +102,7 @@ body {
   border-bottom: 1px solid hsl(200, 100%, 30%);
 }
 
+/* Label for task checkbox */
 .list li label {
   display: flex;
   align-items: center;
@@ -102,6 +119,7 @@ body {
   display: inline-block;
 }
 
+/* Completed task*/
 .list li.completed label::before {
   content: "✔";
   display: flex;
@@ -112,9 +130,9 @@ body {
   font-size: 0.75rem;
 }
 
-
+/* Checkbox checked state */
 .list li:has(input:checked) label::before {
-  content: "️✔︎️";
+  content: "✔︎";
   background: hsl(200, 100%, 40%);
   color: hsl(200, 100%, 90%);
   display: flex;
@@ -122,6 +140,7 @@ body {
   align-items: center;
 }
 
+/* Remove button for list items */
 .list li button {
   background: hsl(0, 100%, 40%, 0.2);
   border: 1px solid hsl(0, 100%, 50%);
