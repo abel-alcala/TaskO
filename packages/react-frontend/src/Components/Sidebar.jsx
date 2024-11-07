@@ -1,8 +1,7 @@
-// Sidebar.jsx
 import React, { useState } from 'react';
-import './Sidebar.css';
+import '../CSS/Sidebar.css';
 
-export function Sidebar({ isOpen, onClose, lists, addList, setCurrentList }) {
+export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
     const [newListName, setNewListName] = useState("");
 
     function handleAddList() {
@@ -14,7 +13,6 @@ export function Sidebar({ isOpen, onClose, lists, addList, setCurrentList }) {
 
     return (
         <div className={`sidebar ${isOpen ? "show" : ""}`}>
-            <button type="button" onClick={onClose} className="btn close-btn">Close Sidebar</button>
             <h2>Lists</h2>
             <input
                 type="text"
@@ -33,7 +31,6 @@ export function Sidebar({ isOpen, onClose, lists, addList, setCurrentList }) {
                 ))}
             </ul>
         </div>
-
     );
 }
 

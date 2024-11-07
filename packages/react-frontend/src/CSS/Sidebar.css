@@ -1,3 +1,8 @@
+h2 {
+    position: relative;
+    z-index: 1;
+}
+
 .sidebar {
     position: fixed;
     top: 0;
@@ -10,6 +15,7 @@
     transition: transform 0.3s ease-in-out;
     padding: 1rem;
     overflow-y: auto;
+    margin-top: 50px
 }
 
 .sidebar.show {
@@ -31,7 +37,7 @@
     outline: none;
     border: 1px solid hsl(214, 15%, 54%);
     background: hsl(214, 15%, 54%);
-    border-radius: 0.25em;
+    border-radius: 0.75em;
     padding: 0.5rem;
     color: white;
     flex-grow: 1;

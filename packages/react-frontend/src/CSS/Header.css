@@ -1,0 +1,35 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: hsl(240, 19%, 8%);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    z-index: 10;
+}
+
+.header-title {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.sidebar-toggle {
+    background: hsl(235, 55%, 49%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    background: hsl(220, 100%, 40%);
+}
+
+.container {
+    margin-top: 4rem;
+}

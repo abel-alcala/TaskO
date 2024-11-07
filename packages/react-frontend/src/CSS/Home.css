@@ -14,19 +14,20 @@ body {
   justify-content: center;
 }
 
-/* Main content container*/
+
 .container {
   max-width: 600px;
   width: 100%;
   padding: 1rem;
-  margin-top: 2rem;
+  margin-top: 4rem;
   transition: margin-left 0.3s ease-in-out;
 }
 
-/* When sidebar is visible, adjust container margin */
+/* When sidebar is visible*/
 .sidebar.show ~ .container {
   margin-left: 350px;
 }
+
 
 /* Header*/
 .header {

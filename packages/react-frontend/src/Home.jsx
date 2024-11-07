@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ToDoForm } from './ToDoForm';
-import { TodoList } from './TodoList';
-import Sidebar from './Sidebar';
-import './Home.css';
+import { ToDoForm } from './Components/ToDoForm.jsx';
+import { TodoList } from './Components/TodoList.jsx';
+import Sidebar from './Components/Sidebar.jsx';
+import Header from './Components/Header.jsx';
+import './CSS/Home.css';
 
 const Home = () => {
     const [lists, setLists] = useState(() => {
@@ -11,7 +12,7 @@ const Home = () => {
     });
 
     const [currentList, setCurrentList] = useState("Default");
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
         localStorage.setItem("LISTS", JSON.stringify(lists));
@@ -53,11 +54,16 @@ const Home = () => {
         }
     }
 
+    function toggleSidebar() {
+        setIsSidebarOpen(!isSidebarOpen);
+    }
+
     return (
         <div className="container">
-            <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="btn">
-                {isSidebarOpen ? "Hide" : "Show"}
-            </button>
+            <Header
+                isSidebarOpen={isSidebarOpen}
+                toggleSidebar={toggleSidebar}
+            />
             <Sidebar
                 isOpen={isSidebarOpen}
                 onClose={() => setIsSidebarOpen(false)}
