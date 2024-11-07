@@ -4,20 +4,29 @@ import cors from "cors";
 // mongoose stuff
 import mongoose from "mongoose";
 import userServices from "./user-services.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const port = 8000;
 
-app.use(cors());
-app.use(express.json());
-
 mongoose
-  .connect("mongodb://localhost:27017/users", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .catch((error) => console.log(error));
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((error) => console.error("Connection error", error));
 
+
+app.use(cors());
+app.use(express.json());
+
+// Root route to test if the server is working
+app.get("/", (req, res) => {
+  res.send("Welcome to the API!");
+});
 
 // get all users - filter by name and job
 app.get("/users", (req, res) => {

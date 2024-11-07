@@ -4,6 +4,7 @@
 Contributing:
 Coding Standards: Name all functions with useful names
 Style Guide: https://airbnb.io/javascript/react/
+Put .env in the .gitignore
 
 Instructions:
 Install ESLint through the website
