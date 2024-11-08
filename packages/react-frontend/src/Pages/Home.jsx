@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { ToDoForm } from './Components/ToDoForm.jsx';
-import { TodoList } from './Components/TodoList.jsx';
-import Sidebar from './Components/Sidebar.jsx';
-import Header from './Components/Header.jsx';
-import './CSS/Home.css';
+import { ToDoForm } from '../Components/ToDoForm.jsx';
+import { TodoList } from '../Components/TodoList.jsx';
+import Sidebar from '../Components/Sidebar.jsx';
+import Header from '../Components/Header.jsx';
+import '../CSS/Home.css';
+import {useNavigate} from "react-router-dom";
 
 const Home = () => {
     const [lists, setLists] = useState(() => {
         const savedLists = localStorage.getItem("LISTS");
-        return savedLists ? JSON.parse(savedLists) : { Default: [] };
+        return savedLists ? JSON.parse(savedLists) : {};
     });
 
-    const [currentList, setCurrentList] = useState("Default");
+    const [currentList, setCurrentList] = useState(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     useEffect(() => {
@@ -26,6 +27,14 @@ const Home = () => {
                 { id: crypto.randomUUID(), title, completed: false }
             ]
         }));
+    }
+
+    function deleteCurrentList() {
+        if (!currentList) return;
+
+        const { [currentList]: _, ...remainingLists } = lists;
+        setLists(remainingLists);
+        setCurrentList(Object.keys(remainingLists)[0] || null);
     }
 
     function toggleToDo(id, completed) {
@@ -44,6 +53,7 @@ const Home = () => {
         }));
     }
 
+
     function addList(name) {
         if (!lists[name]) {
             setLists(currentLists => ({
@@ -58,8 +68,10 @@ const Home = () => {
         setIsSidebarOpen(!isSidebarOpen);
     }
 
+
+
     return (
-        <div className="container">
+        <div className="app-container">
             <Header
                 isSidebarOpen={isSidebarOpen}
                 toggleSidebar={toggleSidebar}
@@ -71,10 +83,30 @@ const Home = () => {
                 addList={addList}
                 setCurrentList={setCurrentList}
             />
-            <h2 className="text-center">{currentList}</h2>
-            <TodoList todos={lists[currentList]} toggleToDo={toggleToDo} deleteToDo={deleteToDo} />
-            <ToDoForm onSubmit={addToDo} />
+            <div className="container">
+                {currentList ? (
+                    <>
+                        <div className="list-header">
+                            <h2 className="text-center">{currentList}</h2>
+                            <button
+                                className="delete-list-btn"
+                                onClick={deleteCurrentList}
+                            >Delete List
+                            </button>
+                        </div>
+                        <TodoList
+                            todos={lists[currentList]}
+                            toggleToDo={toggleToDo}
+                            deleteToDo={deleteToDo}
+                        />
+                        <ToDoForm onSubmit={addToDo}/>
+                    </>
+                ) : (
+                    <p className="no-list-prompt">Create a new list</p>
+                )}
+            </div>
         </div>
+
     );
 };
 

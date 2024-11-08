@@ -1,0 +1,88 @@
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.create-btn {
+    width: 50%;
+    padding: .6rem;
+    font-size: 1em;
+    background: none;
+    border: none;
+    color: hsl(200, 100%, 90%);
+    border-radius: 6px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: .1rem;
+}
+
+.forgot-btn {
+    width: 50%;
+    padding: .6rem;
+    font-size: 1em;
+    background: none;
+    border: none;
+    color: hsl(200, 100%, 90%);
+    border-radius: 8px;
+    text-align: right;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: .1rem;
+
+}
+
+.login-forms input[type="text"], .login-forms input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border: 1px solid hsl(200, 100%, 50%);
+    background: hsl(200, 50%, 50%, 0.2);
+    color: white;
+    border-radius: 0.25em;
+    outline: none;
+}
+
+.login-forms input::placeholder {
+    color: white;
+    opacity: 1;
+}
+
+h2 {
+    font-size: 1em;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+h1 {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 0;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1em;
+    background: hsl(200, 100%, 50%, 0.2);
+    border: none;
+    color: hsl(200, 100%, 90%);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0;
+}
+
+.link-btn {
+    background: hsl(235, 55%, 49%);
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
