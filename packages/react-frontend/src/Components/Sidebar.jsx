@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../CSS/Sidebar.css';
 
-export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
+export function Sidebar({isOpen, lists, addList, setCurrentList}) {
     const [newListName, setNewListName] = useState("");
 
     function handleAddList() {
@@ -16,7 +16,7 @@ export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
             <h2>Lists</h2>
             <input
                 type="text"
-                placeholder="New List Name"
+                placeholder="Create New List"
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
             />

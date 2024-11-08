@@ -17,11 +17,25 @@
     margin: 0;
 }
 
+.link-btn {
+    background: hsl(235, 55%, 49%);
+    color: white;
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.link-btn:hover {
+    background: hsl(220, 100%, 40%);
+}
+
 .sidebar-toggle {
     background: hsl(235, 55%, 49%);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
     cursor: pointer;
 }
