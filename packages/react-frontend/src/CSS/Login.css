@@ -82,7 +82,9 @@ h1 {
     background: hsl(235, 55%, 49%);
     color: white;
     border: none;
-    padding: 0.25rem 0.5rem;
+    padding: 0.5rem 1rem;
     cursor: pointer;
     font-size: 0.9rem;
+    border-radius: 4px;
+    margin-top: 1rem;
 }

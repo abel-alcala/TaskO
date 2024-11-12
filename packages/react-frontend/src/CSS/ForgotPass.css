@@ -1,0 +1,32 @@
+.forgot-password {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.forgot-password-form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.forgot-password-form input {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.reset-password-btn, .go-back-btn {
+    padding: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    background-color: hsl(215, 28%, 17%);
+    color: hsl(200, 100%, 90%);
+    border: none;
+}
+
+.go-back-btn {
+    background-color: hsl(214, 15%, 54%);
+}

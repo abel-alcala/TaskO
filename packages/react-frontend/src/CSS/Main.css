@@ -1,0 +1,77 @@
+/* Style the body to center everything and set a background color */
+body, .home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #1e1e2f;
+    font-family: Arial, sans-serif;
+    color: #e0e0f1;
+}
+
+/* Navigation Bar */
+.navbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    display: flex;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Navigation Button Style */
+.nav-btn {
+    background: none;
+    border: 1px solid hsl(200, 100%, 75%);
+    color: hsl(200, 100%, 90%);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-btn:hover {
+    background-color: hsl(200, 100%, 30%);
+    color: white;
+}
+
+/* Intro Section */
+.intro-section {
+    text-align: center;
+    max-width: 600px;
+    padding: 2rem;
+}
+
+.intro-section h1 {
+    font-size: 2.5em;
+    color: hsl(200, 100%, 85%);
+    margin-bottom: 1rem;
+}
+
+.intro-section p {
+    font-size: 1.2em;
+    color: #cfcff9;
+    margin-bottom: 2rem;
+}
+
+/* Get Started Button */
+.get-started-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1em;
+    color: white;
+    background-color: hsl(235, 55%, 49%);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.get-started-btn:hover {
+    background-color: hsl(235, 55%, 40%);
+}
