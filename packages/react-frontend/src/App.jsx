@@ -5,11 +5,13 @@ import Login from './Pages/Login.jsx';
 import CreateAcc from './Pages/createAcc.jsx';
 import ForgotPass from './Pages/forgotPass.jsx';
 import Main from './Pages/main.jsx';
+import ChangePass from './Pages/changingPass.jsx';
 
 const App = () => {
     return (
       <Router>
         <Routes>
+          <Route path="/change-password" element={<ChangePass />} />
           <Route path="/" element={<Main />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/create-account" element={<CreateAcc />} />
