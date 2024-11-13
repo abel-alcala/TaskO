@@ -6,9 +6,9 @@ import '../CSS/Login.css';
 const Login = () => {
     const navigate = useNavigate();
 
-    // const handleGoHome = () => {
-    //     navigate('/main');
-    // };
+     const handleGoHome = () => {
+         navigate('/home');
+         };
 
     return (
         <div>
@@ -31,7 +31,7 @@ const Login = () => {
                     <button className="forgot-btn" onClick={() => navigate('/forgot-password')}>Forgot Password</button>
                 </div>
                 <button className="login-btn" type="submit">Login</button>
-                {/* <button className="link-btn" onClick={handleGoHome}>Go to Home</button> */}
+                <button className="link-btn" onClick={handleGoHome}>Go to Home</button>
             </form>
         </div>
     );
