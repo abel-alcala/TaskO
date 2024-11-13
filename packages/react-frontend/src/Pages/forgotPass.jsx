@@ -1,33 +1,35 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import emailjs from "emailjs-com";
 import "../CSS/ForgotPass.css";
 
 const ForgotPass = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
   const handleInputChange = (e) => {
     setEmail(e.target.value);
   };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
       e.preventDefault();
-      try {
-        const response = await fetch(
-          "http://localhost:5000/api/auth/forgot-password",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          }
-        );
-        const data = await response.json();
-        setMessage(data.message);
-      } catch (error) {
-        console.error("Error sending email:", error);
-        setMessage("An error occurred. Please try again.");
-      }
+
+      // Configure EmailJS parameters
+      const serviceID = "service_kgdf029";
+      const templateID = "template_jb85t6h";
+      const publicKey = "te34eQlfNWL2xZ92U";
+
+      emailjs
+        .send(serviceID, templateID, { email }, publicKey)
+        .then((response) => {
+          console.log("Email sent successfully:", response);
+          setMessage("Password reset link sent to email.");
+        })
+        .catch((error) => {
+          console.error("Error sending email:", error);
+          setMessage("An error occurred. Please try again.");
+        });
     };
 
   return (
@@ -40,13 +42,14 @@ const ForgotPass = () => {
           name="email"
           placeholder="Email Address"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleInputChange}
           required
         />
         <button type="submit" className="reset-pass-btn">
           Send Reset Link
         </button>
       </form>
+      {message && <p className="message">{message}</p>}
     </div>
   );
 };
