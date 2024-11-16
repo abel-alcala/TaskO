@@ -8,6 +8,7 @@ export function TodoTask({completed, id, title, toggleToDo, deleteToDo}) {
                     onChange={e => toggleToDo(id, e.target.checked)}
                 />
                 {title}
+                {dueDate && <span className="due-date"> (Due: {dueDate})</span>}
             </label>
             <button
                 onClick={() => deleteToDo(id)}

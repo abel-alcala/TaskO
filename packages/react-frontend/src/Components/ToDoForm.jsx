@@ -2,13 +2,15 @@ import {useState} from 'react';
 
 export function ToDoForm({onSubmit}) {
     const [newItem, setNewItem] = useState("");
+    const [dueDate, setDueDate] = useState(""); 
 
     function handleSubmit(e) {
         e.preventDefault();
         if (newItem === "") return;
 
-        onSubmit(newItem);
+        onSubmit({ text: newItem, dueDate }); 
         setNewItem("");
+        setDueDate("");
     }
 
     return (
@@ -21,8 +23,17 @@ export function ToDoForm({onSubmit}) {
                     type="text"
                     id="item"
                 />
-                <button className="btn">Create Task</button>
             </div>
+            <div className="form-row">
+                <label htmlFor="due-date">Due Date </label>
+                <input
+                    type="date"
+                    id="due-date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
+                />
+            </div>
+            <button className="btn">Create Task</button>
         </form>
     );
 }

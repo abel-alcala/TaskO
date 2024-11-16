@@ -24,7 +24,7 @@ const Home = () => {
             ...currentLists,
             [currentList]: [
                 ...currentLists[currentList],
-                { id: crypto.randomUUID(), title, completed: false }
+                { id: crypto.randomUUID(), title, dueDate, completed: false }
             ]
         }));
     }
