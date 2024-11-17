@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { ToDoForm } from '../Components/ToDoForm.jsx';
-import { TodoList } from '../Components/TodoList.jsx';
+import React, {useEffect, useState} from 'react';
+import {ToDoForm} from '../Components/ToDoForm.jsx';
+import {TodoList} from '../Components/TodoList.jsx';
 import Sidebar from '../Components/Sidebar.jsx';
 import Header from '../Components/Header.jsx';
 import '../CSS/Home.css';
@@ -24,7 +24,7 @@ const Home = () => {
             ...currentLists,
             [currentList]: [
                 ...currentLists[currentList],
-                { id: crypto.randomUUID(), title, dueDate, completed: false }
+                {id: crypto.randomUUID(), title, dueDate, completed: false}
             ]
         }));
     }
@@ -32,7 +32,7 @@ const Home = () => {
     function deleteCurrentList() {
         if (!currentList) return;
 
-        const { [currentList]: _, ...remainingLists } = lists;
+        const {[currentList]: _, ...remainingLists} = lists;
         setLists(remainingLists);
         setCurrentList(Object.keys(remainingLists)[0] || null);
     }
@@ -41,7 +41,7 @@ const Home = () => {
         setLists(currentLists => ({
             ...currentLists,
             [currentList]: currentLists[currentList].map(todo =>
-                todo.id === id ? { ...todo, completed } : todo
+                todo.id === id ? {...todo, completed} : todo
             )
         }));
     }
@@ -67,7 +67,6 @@ const Home = () => {
     function toggleSidebar() {
         setIsSidebarOpen(!isSidebarOpen);
     }
-
 
 
     return (
