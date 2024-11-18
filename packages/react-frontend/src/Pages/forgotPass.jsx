@@ -21,7 +21,7 @@ const ForgotPass = () => {
       const publicKey = "te34eQlfNWL2xZ92U";
 
       emailjs
-        .send(serviceID, templateID, { email }, publicKey)
+        .send(serviceID, templateID, { to_email:email }, publicKey)
         .then((response) => {
           console.log("Email sent successfully:", response);
           setMessage("Password reset link sent to email.");
