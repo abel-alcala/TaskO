@@ -1,6 +1,7 @@
 import React from 'react';
 import '../CSS/Header.css';
 import {useNavigate} from "react-router-dom";
+import DigitalClock from './DigitalClock.jsx';
 
 export function Header({isSidebarOpen, toggleSidebar}) {
     const navigate = useNavigate();
@@ -17,7 +18,10 @@ export function Header({isSidebarOpen, toggleSidebar}) {
                 {isSidebarOpen ? 'Hide' : 'Show'}
             </button>
             <h1 className="header-title">Team One App</h1>
-            <button className="link-btn" onClick={handleGoLogin}>Sign Out</button>
+            <div className="header-right-section">
+                <DigitalClock />
+                <button className="link-btn" onClick={handleGoLogin}>Sign Out</button>
+            </div>
         </header>
     );
 }
