@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"cd packages/react-frontend && vite\" \"cd packages/express-backend && npx nodemon backend.js\"",
-    "start": "npm run dev"
+    "lint": "npx eslint . && npx prettier --check .",
+    "test": "npx jest",
+    "dev": "nodemon backend_with_db.js",
+    "start": "node backend_with_db.js"
   },
   "workspaces": [
     "packages/*"
