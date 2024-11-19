@@ -6,8 +6,8 @@
   "scripts": {
     "lint": "npx eslint . && npx prettier --check .",
     "test": "npx jest",
-    "dev": "nodemon express-backend",
-    "start": "node express-backend"
+    "dev": "concurrently \"cd packages/react-frontend && vite\" \"cd packages/express-backend && npx nodemon backend.js\"",
+    "start": "npm run dev"
   },
   "workspaces": [
     "packages/*"

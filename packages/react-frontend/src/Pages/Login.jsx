@@ -34,8 +34,8 @@ const Login = () => {
       if (!response.ok) {
         throw new Error(data.message || "Login Failed");
       }
-      localStorage.setItem("token", data.token); // Store the token
-      localStorage.setItem("userName", data.userName); // Store the userName
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userName", data.userName);
       login(data);
       navigate("/home");
     } catch (err) {
