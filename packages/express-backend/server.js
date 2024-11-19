@@ -28,11 +28,11 @@ const connectDB = async () => {
 
 app.use("/", router);
 
-app.get("/", (req, res, _next) => {
+app.get("/", (req, res) => {
   res.send("Welcome to the API!");
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
