@@ -88,9 +88,9 @@ const Login = () => {
         <button className="login-btn" type="submit">
           Login
         </button>
-        <button className="link-btn" onClick={handleGoHome}>
-          Go to Home
-        </button>
+        {/*<button className="link-btn" onClick={handleGoHome}>*/}
+        {/*  Go to Home*/}
+        {/*</button>*/}
       </form>
     </div>
   );
