@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserManage.jsx";
 import "../CSS/CreateAcc.css";
 
 const CreateAcc = () => {
@@ -13,6 +14,7 @@ const CreateAcc = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const { login } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +25,6 @@ const CreateAcc = () => {
     }
 
     try {
-      console.log("Sending data:", {
-        email: formData.email,
-        userName: formData.userName,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        password: formData.password,
-      });
-
       const response = await fetch("http://localhost:8000/users", {
         method: "POST",
         headers: {
@@ -46,16 +40,15 @@ const CreateAcc = () => {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || "Failed to create account");
       }
-
-      console.log("Account Created Successfully");
-      navigate("/login");
+      localStorage.setItem("token", data.token); // Store the token
+      localStorage.setItem("userName", data.userName); // Store the userName
+      login(data);
+      navigate("/home");
     } catch (err) {
       setError(err.message || "Error creating your account :(");
-      console.error("Error details:", err);
     }
   };
 

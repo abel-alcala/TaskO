@@ -23,7 +23,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/users/login", {
+      const response = await fetch("http://localhost:8000/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,8 +34,9 @@ const Login = () => {
       if (!response.ok) {
         throw new Error(data.message || "Login Failed");
       }
+      localStorage.setItem("token", data.token); // Store the token
+      localStorage.setItem("userName", data.userName); // Store the userName
       login(data);
-      console.log("Login Success");
       navigate("/home");
     } catch (err) {
       setError(err.message);
