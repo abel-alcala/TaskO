@@ -53,6 +53,7 @@ router.get("/users", async (req, res) => {
     const users = await User.find().select("-password").populate("lists");
     res.json(users);
   } catch  {
+    // eslint-disable-next-line no-unused-vars
     console.error("Error fetching users:", error);
     res.status(500).json({
       message: "Error fetching users",
