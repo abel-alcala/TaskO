@@ -1,46 +1,97 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserManage.jsx";
 import "../CSS/CreateAcc.css";
 
 const CreateAcc = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: '', username: '', password: '', confirmPassword: ''});
-  const [error, setError] = useState('');
-  
-  const handleInputChange = (e) => {
-    const { name, value } =  e.target;
-    setFormData({...formData, [name]: value});
-  };
+  const [formData, setFormData] = useState({
+    email: "",
+    userName: "",
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [error, setError] = useState("");
+  const { login } = useUser();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.password != formData.confirmPassword){
-        setError("Password do not match");
-        return;
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
     }
-    setError('');
-    console.log("Account Created:", formData);
-    navigate('/login');
-  }
+
+    try {
+      const response = await fetch("http://localhost:8000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          userName: formData.userName,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to create account");
+      }
+      localStorage.setItem("token", data.token); // Store the token
+      localStorage.setItem("userName", data.userName); // Store the userName
+      login(data);
+      navigate("/home");
+    } catch (err) {
+      setError(err.message || "Error creating your account :(");
+    }
+  };
 
   return (
     <div className="create-acc">
       <h1>Create Account</h1>
       <form onSubmit={handleSubmit} className="create-acc-form">
         <input
-          type="text"
+          type="email"
           name="email"
           placeholder="Email"
           value={formData.email}
-          onChange={handleInputChange}
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           required
         />
         <input
           type="text"
-          name="username"
+          name="userName"
           placeholder="Username"
-          value={formData.username}
-          onChange={handleInputChange}
+          value={formData.userName}
+          onChange={(e) =>
+            setFormData({ ...formData, userName: e.target.value })
+          }
+          required
+        />
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={(e) =>
+            setFormData({ ...formData, firstName: e.target.value })
+          }
+          required
+        />
+        <input
+          type="text"
+          name="lastName"
+          placeholder="Last Name"
+          value={formData.lastName}
+          onChange={(e) =>
+            setFormData({ ...formData, lastName: e.target.value })
+          }
           required
         />
         <input
@@ -48,7 +99,9 @@ const CreateAcc = () => {
           name="password"
           placeholder="Password"
           value={formData.password}
-          onChange={handleInputChange}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
           required
         />
         <input
@@ -56,15 +109,15 @@ const CreateAcc = () => {
           name="confirmPassword"
           placeholder="Confirm Password"
           value={formData.confirmPassword}
-          onChange={handleInputChange}
+          onChange={(e) =>
+            setFormData({ ...formData, confirmPassword: e.target.value })
+          }
           required
         />
-        <button
-          type="submit"
-          className="create-acc-btn"
-        >
+        <button type="submit" className="create-acc-btn">
           Create Account
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
     </div>
   );
