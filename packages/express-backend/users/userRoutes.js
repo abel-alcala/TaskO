@@ -42,7 +42,7 @@ router.post("/login", async (req, res) => {
     const userResponse = user.toObject();
     delete userResponse.password;
     res.json({ ...userResponse, token });
-  } catch (error) {
+  } catch  {
     res.status(500).json({ message: "Error logging in" });
   }
 });
@@ -52,7 +52,7 @@ router.get("/users", async (req, res) => {
   try {
     const users = await User.find().select("-password").populate("lists");
     res.json(users);
-  } catch (error) {
+  } catch  {
     console.error("Error fetching users:", error);
     res.status(500).json({
       message: "Error fetching users",
@@ -88,7 +88,7 @@ router.post("/users", async (req, res) => {
     res
       .status(201)
       .json({ message: "User created successfully", user: userResponse });
-  } catch (error) {
+  } catch  {
     res.status(500).json({ message: "Error creating user" });
   }
 });
@@ -101,7 +101,7 @@ router.get("/users/:userName", authenticateUser, async (req, res) => {
       .populate("lists");
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
-  } catch (error) {
+  } catch  {
     res.status(500).json({ message: "Error fetching user" });
   }
 });
@@ -119,7 +119,7 @@ router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
 
     await User.findByIdAndUpdate(user._id, { $push: { lists: list._id } });
     res.status(201).json(list);
-  } catch (error) {
+  } catch  {
     res.status(500).json({ message: "Error creating list" });
   }
 });
@@ -135,7 +135,7 @@ router.get("/users/:userName/lists", authenticateUser, async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user.lists || []);
-  } catch (error) {
+  } catch  {
     res.status(500).json({ message: "Error fetching lists" });
   }
 });
@@ -156,7 +156,7 @@ router.post(
 
       await List.findByIdAndUpdate(list._id, { $push: { tasks: task._id } });
       res.status(201).json(task);
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error creating task" });
     }
   },
@@ -172,7 +172,7 @@ router.get(
       );
       if (!list) return res.status(404).json({ message: "List not found" });
       res.json(list.tasks);
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error fetching tasks" });
     }
   },
@@ -190,7 +190,7 @@ router.put(
       );
       if (!list) return res.status(404).json({ message: "List not found" });
       res.json(list);
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error updating list" });
     }
   },
@@ -208,7 +208,7 @@ router.put(
       );
       if (!task) return res.status(404).json({ message: "Task not found" });
       res.json(task);
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error updating task" });
     }
   },
@@ -228,7 +228,7 @@ router.delete(
 
       await Task.deleteMany({ list: list._id });
       res.json({ message: "List and associated tasks deleted" });
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error deleting list" });
     }
   },
@@ -246,7 +246,7 @@ router.delete(
         $pull: { tasks: task._id },
       });
       res.json({ message: "Task deleted" });
-    } catch (error) {
+    } catch  {
       res.status(500).json({ message: "Error deleting task" });
     }
   },

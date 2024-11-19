@@ -28,7 +28,7 @@ const connectDB = async () => {
 
 app.use("/", router);
 
-app.get("/", (req, res) => {
+app.get("/", (req, res, _next) => {
   res.send("Welcome to the API!");
 });
 
