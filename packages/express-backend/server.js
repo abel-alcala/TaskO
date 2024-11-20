@@ -32,11 +32,6 @@ app.get("/", (req, res) => {
   res.send("Welcome to the API!");
 });
 
-app.use((err, req, res) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
-
 const startServer = async () => {
   try {
     await connectDB();
