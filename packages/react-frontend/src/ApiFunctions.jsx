@@ -1,4 +1,4 @@
-const API_BASE_URL = "tasko-api.azurewebsites.net";
+const API_BASE_URL = "https://tasko-api.azurewebsites.net/";
 
 export const api = {
   login: async (userName, password) => {
