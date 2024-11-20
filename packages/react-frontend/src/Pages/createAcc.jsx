@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserManage.jsx";
 import "../CSS/CreateAcc.css";
+import { api } from "../ApiFunctions.jsx";
 
 const CreateAcc = () => {
   const navigate = useNavigate();
@@ -25,26 +26,15 @@ const CreateAcc = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          userName: formData.userName,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          password: formData.password,
-        }),
+      const data = await api.createAccount({
+        email: formData.email,
+        userName: formData.userName,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        password: formData.password,
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create account");
-      }
-      localStorage.setItem("token", data.token); // Store the token
-      localStorage.setItem("userName", data.userName); // Store the userName
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userName", data.userName);
       login(data);
       navigate("/home");
     } catch (err) {

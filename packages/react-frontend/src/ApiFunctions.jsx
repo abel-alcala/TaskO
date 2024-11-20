@@ -11,6 +11,18 @@ export const api = {
     return response.json();
   },
 
+  createAccount: async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    if (!response.ok) throw new Error("Failed to create account");
+    return response.json();
+  },
+
   // Lists
   getLists: async (userName) => {
     const token = localStorage.getItem("token");

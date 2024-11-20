@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserManage.jsx";
 import "../CSS/Login.css";
+import { api } from "../ApiFunctions.jsx";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -23,17 +24,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Login Failed");
-      }
+      const data = await api.login(formData.userName, formData.password);
       localStorage.setItem("token", data.token);
       localStorage.setItem("userName", data.userName);
       login(data);
@@ -41,10 +32,6 @@ const Login = () => {
     } catch (err) {
       setError(err.message);
     }
-  };
-
-  const handleGoHome = () => {
-    navigate("/home");
   };
 
   return (
@@ -88,9 +75,6 @@ const Login = () => {
         <button className="login-btn" type="submit">
           Login
         </button>
-        {/*<button className="link-btn" onClick={handleGoHome}>*/}
-        {/*  Go to Home*/}
-        {/*</button>*/}
       </form>
     </div>
   );
