@@ -40,9 +40,8 @@ app.use((err, req, res) => {
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-      console.log(`http://localhost:${port}`);
+    app.listen(process.env.PORT || port, () => {
+      console.log("REST API is listening.");
     });
   } catch (error) {
     console.error("Server startup failed:", error);
