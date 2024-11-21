@@ -2,25 +2,59 @@ const API_BASE_URL = "https://tasko-api.azurewebsites.net";
 
 export const api = {
   login: async (userName, password) => {
-    const response = await fetch(`${API_BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userName, password }),
-    });
-    if (!response.ok) throw new Error("Login failed");
-    return response.json();
+    try {
+      const response = await fetch(`${API_BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName, password }),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error("Login failed:", {
+          status: response.status,
+          statusText: response.statusText,
+          details: errorDetails,
+        });
+        throw new Error(
+          `Login failed: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error in login request:", error.message);
+      throw error;
+    }
   },
 
   createAccount: async (userData) => {
-    const response = await fetch(`${API_BASE_URL}/users`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    if (!response.ok) throw new Error("Failed to create account");
-    return response.json();
+    try {
+      const response = await fetch(`${API_BASE_URL}/users`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error("Failed to create account:", {
+          status: response.status,
+          statusText: response.statusText,
+          details: errorDetails,
+        });
+        throw new Error(
+          `Failed to create account: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error in createAccount request:", error.message);
+      throw error;
+    }
   },
 
   // Lists
