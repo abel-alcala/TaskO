@@ -46,19 +46,22 @@ export const generateAccessToken = (username) => {
 router.post("/login", async (req, res) => {
   try {
     const { userName, password } = req.body;
-    const user = await User.findOne({ userName });
+    if (!userName || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username and password are required" });
+    }
 
+    const user = await User.findOne({ userName });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    const token = await generateAccessToken(req.body.userName);
-
-    const userResponse = user.toObject();
-    delete userResponse.password;
-    res.json({ ...userResponse, token });
-  } catch {
-    res.status(500).json({ message: "Error logging in" });
+    const token = await generateAccessToken(userName);
+    res.json({ userName: user.userName, token });
+  } catch (err) {
+    console.error("Error in /login:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
