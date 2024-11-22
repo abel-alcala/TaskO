@@ -11,17 +11,34 @@ const authenticateUser = (req, res, next) => {
 
   if (!token) {
     console.log("No token received");
-    return res.status(401).end();
+    res.status(401).end();
+  } else {
+    jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
+      if (decoded) {
+        req.body["username"] = decoded.username;
+        next();
+      } else {
+        console.log("JWT error:", error);
+        res.status(401).end();
+      }
+    });
   }
+};
 
-  jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
-    if (decoded) {
-      req.user = decoded;
-      next();
-    } else {
-      console.log("JWT error:", error);
-      res.status(401).end();
-    }
+export const generateAccessToken = (username) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      { username: username },
+      process.env.TOKEN_SECRET,
+      { expiresIn: "1d" },
+      (error, token) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(token);
+        }
+      },
+    );
   });
 };
 
@@ -35,9 +52,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    const token = jwt.sign({ userName: userName }, process.env.JWT_SECRET, {
-      expiresIn: "24h",
-    });
+    const token = await generateAccessToken(req.body.userName);
 
     const userResponse = user.toObject();
     delete userResponse.password;
@@ -82,12 +97,16 @@ router.post("/users", async (req, res) => {
       password: hashedPassword,
       list: [],
     });
+    const token = await generateAccessToken(req.body.userName);
+    console.log("Token:", token);
 
     const userResponse = user.toObject();
     delete userResponse.password;
-    res
-      .status(201)
-      .json({ message: "User created successfully", user: userResponse });
+    res.status(201).json({
+      message: "User created successfully",
+      user: userResponse,
+      token: token,
+    });
   } catch {
     res.status(500).json({ message: "Error creating user" });
   }
