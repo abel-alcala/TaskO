@@ -109,10 +109,11 @@ router.post("/users", async (req, res) => {
     };
     const userResponse = await User.create(user);
     const token = await generateAccessToken(userName);
-    const { password: _, ...userWP } = userResponse.toObject();
+    userResponse.toObject();
+    delete userResponse.password;
     res.status(201).json({
       message: "User created successfully",
-      user: userWP,
+      user: userResponse,
       token,
     });
   } catch (err) {
