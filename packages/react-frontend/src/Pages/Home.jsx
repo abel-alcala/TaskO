@@ -14,11 +14,9 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const userName = localStorage.getItem("userName");
-  const token = localStorage.getItem("token");
-
   console.log(userName);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (!token) {

@@ -15,7 +15,6 @@ const CreateAcc = () => {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
-  const { login } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,18 +26,21 @@ const CreateAcc = () => {
 
     try {
       const data = await api.createAccount({
-        email: formData.email,
-        userName: formData.userName,
         firstName: formData.firstName,
         lastName: formData.lastName,
+        userName: formData.userName,
+        email: formData.email,
         password: formData.password,
       });
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("userName", data.userName);
-      login(data);
-      navigate("/home");
+      console.log(data);
+      navigate("/login");
     } catch (err) {
-      setError(err.message || "Error creating your account :(");
+      console.error("Account creation error:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        err.message ||
+        "Error creating your account";
+      setError(errorMessage);
     }
   };
 

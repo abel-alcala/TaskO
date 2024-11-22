@@ -15,7 +15,7 @@ const authenticateUser = (req, res, next) => {
   } else {
     jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
       if (decoded) {
-        req.body["username"] = decoded.username;
+        req.body["userName"] = decoded.userName;
         next();
       } else {
         console.log("JWT error:", error);
@@ -28,11 +28,12 @@ const authenticateUser = (req, res, next) => {
 export const generateAccessToken = (username) => {
   return new Promise((resolve, reject) => {
     jwt.sign(
-      { username: username },
+      { userName: username },
       process.env.TOKEN_SECRET,
       { expiresIn: "1d" },
       (error, token) => {
         if (error) {
+          console.log("Error generating token:", error);
           reject(error);
         } else {
           resolve(token);
@@ -81,8 +82,12 @@ router.get("/users", async (req, res) => {
 //register user
 router.post("/users", async (req, res) => {
   try {
+    const { firstName, lastName, email, userName, password } = req.body;
+    if (!email || !userName || !password || !firstName || !lastName) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
     const existingUser = await User.findOne({
-      $or: [{ email: req.body.email }, { userName: req.body.userName }],
+      $or: [{ email: email }, { userName: userName }],
     });
 
     if (existingUser) {
@@ -93,24 +98,25 @@ router.post("/users", async (req, res) => {
             : "Username already taken",
       });
     }
-
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    const user = await User.create({
-      ...req.body,
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = {
+      userName,
+      email,
+      firstName,
+      lastName,
       password: hashedPassword,
-      list: [],
-    });
-    const token = await generateAccessToken(req.body.userName);
-    console.log("Token:", token);
-
-    const userResponse = user.toObject();
-    delete userResponse.password;
+      lists: [],
+    };
+    const userResponse = await User.create(user);
+    const token = await generateAccessToken(userName);
+    const { password: _, ...userWP } = userResponse.toObject();
     res.status(201).json({
       message: "User created successfully",
-      user: userResponse,
-      token: token,
+      user: userWP,
+      token,
     });
-  } catch {
+  } catch (err) {
+    console.error("Error creating user:", err);
     res.status(500).json({ message: "Error creating user" });
   }
 });

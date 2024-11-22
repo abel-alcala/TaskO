@@ -77,11 +77,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      index: true,
       match: [/^\S+@\S+\.\S+$/, "Use a valid email address"],
     },
     firstName: {
@@ -107,8 +109,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-
-userSchema.index({ userName: 1 }, { unique: true, sparse: true });
 
 export const User = mongoose.model("User", userSchema);
 export const List = mongoose.model("List", listSchema);

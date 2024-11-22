@@ -28,9 +28,11 @@ export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
           <p>No lists available. Create one!</p>
         ) : (
           lists.map(({ id, name }) => (
-            <div key={id} onClick={() => setCurrentList(id)}>
-              {name}
-            </div>
+            <li key={id}>
+              <button type="button" onClick={() => setCurrentList(id)}>
+                {name}
+              </button>
+            </li>
           ))
         )}
       </ul>
