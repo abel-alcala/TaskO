@@ -79,8 +79,8 @@ router.get("/users", async (req, res) => {
   }
 });
 
-//register user
-router.post("/users", async (req, res) => {
+//createAccount
+router.post("/register", async (req, res) => {
   try {
     const { firstName, lastName, email, userName, password } = req.body;
     if (!email || !userName || !password || !firstName || !lastName) {
@@ -122,20 +122,24 @@ router.post("/users", async (req, res) => {
   }
 });
 
-// users
-router.get("/users/:userName", authenticateUser, async (req, res) => {
+//getList
+router.get("/users/:userName/lists", authenticateUser, async (req, res) => {
   try {
-    const user = await User.findOne({ userName: req.params.userName })
-      .select("-password")
-      .populate("lists");
+    const user = await User.findOne({ userName: req.params.userName }).populate(
+      {
+        path: "lists",
+        populate: { path: "tasks" },
+      },
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
+
+    res.json(user.lists || []);
   } catch {
-    res.status(500).json({ message: "Error fetching user" });
+    res.status(500).json({ message: "Error fetching lists" });
   }
 });
 
-// lists
+//createLists
 router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
   try {
     const user = await User.findOne({ userName: req.params.userName });
@@ -153,44 +157,26 @@ router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
   }
 });
 
-router.get("/users/:userName/lists", authenticateUser, async (req, res) => {
-  try {
-    const user = await User.findOne({ userName: req.params.userName }).populate(
-      {
-        path: "lists",
-        populate: { path: "tasks" },
-      },
-    );
-    if (!user) return res.status(404).json({ message: "User not found" });
-
-    res.json(user.lists || []);
-  } catch {
-    res.status(500).json({ message: "Error fetching lists" });
-  }
-});
-
-// tasks
-router.post(
-  "/users/:userName/lists/:listId/tasks",
+// Delete a list
+router.delete(
+  "/users/:userName/lists/:listId",
   authenticateUser,
   async (req, res) => {
     try {
-      const list = await List.findOne({ listID: req.params.listId });
+      const list = await List.findOneAndDelete({ listID: req.params.listId });
       if (!list) return res.status(404).json({ message: "List not found" });
 
-      const task = await Task.create({
-        ...req.body,
-        list: list._id,
+      await User.findByIdAndUpdate(list.createdBy, {
+        $pull: { lists: list._id },
       });
-
-      await List.findByIdAndUpdate(list._id, { $push: { tasks: task._id } });
-      res.status(201).json(task);
+      res.status(204).end();
     } catch {
-      res.status(500).json({ message: "Error creating task" });
+      res.status(500).json({ message: "Error deleting list" });
     }
   },
 );
 
+//getTasks
 router.get(
   "/users/:userName/lists/:listId/tasks",
   authenticateUser,
@@ -207,6 +193,86 @@ router.get(
   },
 );
 
+//createTasks
+router.post(
+  "/users/:userName/lists/:listId/tasks",
+  authenticateUser,
+  async (req, res) => {
+    try {
+      const list = await List.findOne({ listID: req.params.listId }).populate(
+        "createdBy",
+      );
+      if (!list) return res.status(404).json({ message: "List not found" });
+
+      if (list.createdBy.userName !== req.params.userName) {
+        return res
+          .status(403)
+          .json({ message: "Unauthorized to add tasks to this list" });
+      }
+
+      const { taskName, notes, dueDate, completed, remindDate, priority } =
+        req.body;
+      const task = await Task.create({
+        taskName,
+        notes: notes || null,
+        dueDate: dueDate || null,
+        completed: completed || false,
+        remindDate: remindDate || null,
+        priority: priority || null,
+        taskID: crypto.randomUUID(),
+        list: list._id,
+      });
+
+      list.tasks.push(task._id);
+      await list.save();
+
+      res.status(201).json(task);
+    } catch (err) {
+      console.error("Error creating task:", err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  },
+);
+
+//updateTask
+router.put(
+  "/users/:userName/lists/:listId/tasks/:taskId",
+  authenticateUser,
+  async (req, res) => {
+    try {
+      const updates = req.body;
+      const task = await Task.findOneAndUpdate(
+        { taskID: req.params.taskId },
+        updates,
+        { new: true, runValidators: true },
+      );
+      if (!task) return res.status(404).json({ message: "Task not found" });
+      res.json(task);
+    } catch (err) {
+      console.error("Error updating task:", err);
+      res.status(500).json({ message: "Error updating task" });
+    }
+  },
+);
+
+//deleteTask
+router.delete(
+  "/users/:userName/lists/:listId/tasks/:taskId",
+  authenticateUser,
+  async (req, res) => {
+    try {
+      const task = await Task.findOneAndDelete({ taskID: req.params.taskId });
+      if (!task) return res.status(404).json({ message: "Task not found" });
+
+      await List.findByIdAndUpdate(task.list, { $pull: { tasks: task._id } });
+      res.status(204).end();
+    } catch {
+      res.status(500).json({ message: "Error deleting task" });
+    }
+  },
+);
+
+//updateList not an Api Call yet
 router.put(
   "/users/:userName/lists/:listId",
   authenticateUser,
@@ -225,24 +291,7 @@ router.put(
   },
 );
 
-router.put(
-  "/users/:userName/lists/:listId/tasks/:taskId",
-  authenticateUser,
-  async (req, res) => {
-    try {
-      const task = await Task.findOneAndUpdate(
-        { taskID: req.params.taskId },
-        req.body,
-        { new: true },
-      );
-      if (!task) return res.status(404).json({ message: "Task not found" });
-      res.json(task);
-    } catch {
-      res.status(500).json({ message: "Error updating task" });
-    }
-  },
-);
-
+//deleteList
 router.delete(
   "/users/:userName/lists/:listId",
   authenticateUser,
@@ -263,22 +312,17 @@ router.delete(
   },
 );
 
-router.delete(
-  "/users/:userName/lists/:listId/tasks/:taskId",
-  authenticateUser,
-  async (req, res) => {
-    try {
-      const task = await Task.findOneAndDelete({ taskID: req.params.taskId });
-      if (!task) return res.status(404).json({ message: "Task not found" });
-
-      await List.findByIdAndUpdate(task.list, {
-        $pull: { tasks: task._id },
-      });
-      res.json({ message: "Task deleted" });
-    } catch {
-      res.status(500).json({ message: "Error deleting task" });
-    }
-  },
-);
+// users
+router.get("/users/:userName", authenticateUser, async (req, res) => {
+  try {
+    const user = await User.findOne({ userName: req.params.userName })
+      .select("-password")
+      .populate("lists");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch {
+    res.status(500).json({ message: "Error fetching user" });
+  }
+});
 
 export default router;

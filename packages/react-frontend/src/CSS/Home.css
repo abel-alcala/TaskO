@@ -202,3 +202,11 @@ body {
 .list li button:hover {
     background: hsl(0, 100%, 40%, 0.4);
 }
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+}
+.form-row {
+    margin-bottom: 10px;
+}

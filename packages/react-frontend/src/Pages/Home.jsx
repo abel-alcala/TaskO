@@ -15,7 +15,6 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const userName = localStorage.getItem("userName");
-  console.log(userName);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -62,6 +61,7 @@ const Home = () => {
       }));
     } catch (err) {
       setError(err.message);
+      console.error("Error adding task:", err);
     }
   };
 
@@ -74,24 +74,28 @@ const Home = () => {
       setCurrentList(Object.keys(remainingLists)[0] || null);
     } catch (err) {
       setError(err.message);
+      console.error("Error deleting list:", err);
     }
   };
 
   const toggleToDo = async (taskId, completed) => {
     if (!currentList || !lists[currentList]) return;
     try {
-      await api.updateTask(userName, currentList, taskId, { completed });
+      const updatedTask = await api.updateTask(userName, currentList, taskId, {
+        completed,
+      });
       setLists((prevLists) => ({
         ...prevLists,
         [currentList]: {
           ...prevLists[currentList],
           tasks: prevLists[currentList].tasks.map((task) =>
-            task.taskID === taskId ? { ...task, completed } : task,
+            task.taskID === taskId ? updatedTask : task,
           ),
         },
       }));
     } catch (err) {
       setError(err.message);
+      console.error("Error toggling task:", err);
     }
   };
 
@@ -110,12 +114,13 @@ const Home = () => {
       }));
     } catch (err) {
       setError(err.message);
+      console.error("Error deleting task:", err);
     }
   };
 
   const addList = async (name) => {
     try {
-      const response = await api.createList(userName, name);
+      const response = await api.createList(userName, { listName: name });
       setLists((prevLists) => ({
         ...prevLists,
         [response.listID]: {
@@ -126,6 +131,7 @@ const Home = () => {
       setCurrentList(response.listID);
     } catch (err) {
       setError(err.message);
+      console.error("Error adding list:", err);
     }
   };
 

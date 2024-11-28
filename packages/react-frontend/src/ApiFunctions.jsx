@@ -30,7 +30,7 @@ export const api = {
 
   createAccount: async (userData) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/users`, {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,57 +106,92 @@ export const api = {
 
   // Tasks
   createTask: async (userName, listId, taskData) => {
-    const token = localStorage.getItem("token");
-    const taskID = crypto.randomUUID();
-    const response = await fetch(
-      `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Authentication token not found");
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            taskName: taskData.taskName,
+            notes: taskData.notes || null,
+            dueDate: taskData.dueDate || null,
+            completed: taskData.completed || false,
+            remindDate: taskData.remindDate || null,
+            priority: taskData.priority || null,
+          }),
         },
-        body: JSON.stringify({
-          taskID,
-          taskName: taskData.text,
-          dueDate: taskData.dueDate,
-        }),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to create task");
-    return response.json();
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(`Failed to create task: ${errorBody.message}`);
+      }
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+      throw err;
+    }
   },
 
   updateTask: async (userName, listId, taskId, updates) => {
-    const token = localStorage.getItem("token");
-    const response = await fetch(
-      `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks/${taskId}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Authentication token not found");
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks/${taskId}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updates),
         },
-        body: JSON.stringify(updates),
-      },
-    );
-    if (!response.ok) throw new Error("Failed to update task");
-    return response.json();
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(`Failed to update task: ${errorBody.message}`);
+      }
+      return await response.json();
+    } catch (err) {
+      console.error(err.message);
+      throw err;
+    }
   },
 
   deleteTask: async (userName, listId, taskId) => {
-    const token = localStorage.getItem("token");
-    const response = await fetch(
-      `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks/${taskId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Authentication token not found");
+
+      const response = await fetch(
+        `${API_BASE_URL}/users/${userName}/lists/${listId}/tasks/${taskId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         },
-      },
-    );
-    if (!response.ok) throw new Error("Failed to delete task");
-    return response.json();
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        throw new Error(`Failed to delete task: ${errorBody.message}`);
+      }
+      return response.json();
+    } catch (err) {
+      console.error(err.message);
+      throw err;
+    }
   },
 };
