@@ -20,10 +20,10 @@ const taskSchema = new mongoose.Schema(
 
 const listSchema = new mongoose.Schema(
   {
-    listID: { type: String, required: true, unique: true, index: true },
+    listID: { type: String, required: true, unique: true },
     listName: { type: String, required: true },
     tasks: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
-    color: { type: Number },
+    color: { type: Number, required: false },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

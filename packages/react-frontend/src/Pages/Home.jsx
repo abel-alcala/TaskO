@@ -120,7 +120,7 @@ const Home = () => {
 
   const addList = async (name) => {
     try {
-      const response = await api.createList(userName, { listName: name });
+      const response = await api.createList(userName, name);
       setLists((prevLists) => ({
         ...prevLists,
         [response.listID]: {
