@@ -169,7 +169,8 @@ router.delete(
       await User.findByIdAndUpdate(list.createdBy, {
         $pull: { lists: list._id },
       });
-      res.status(204).end();
+      await Task.deleteMany({ list: list._id });
+      res.status(200).json({ message: "List and associated tasks deleted" });
     } catch {
       res.status(500).json({ message: "Error deleting list" });
     }
@@ -265,7 +266,7 @@ router.delete(
       if (!task) return res.status(404).json({ message: "Task not found" });
 
       await List.findByIdAndUpdate(task.list, { $pull: { tasks: task._id } });
-      res.status(204).end();
+      res.status(200).json({ message: "tasks deleted" });
     } catch {
       res.status(500).json({ message: "Error deleting task" });
     }

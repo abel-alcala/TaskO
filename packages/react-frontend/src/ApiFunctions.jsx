@@ -100,8 +100,14 @@ export const api = {
         },
       },
     );
-    if (!response.ok) throw new Error("Failed to delete list");
-    return response.json();
+    if (response.status === 204) {
+      return { message: "List successfully deleted" };
+    }
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Error deleting list");
+    }
+    return data;
   },
 
   // Tasks
@@ -128,7 +134,6 @@ export const api = {
           }),
         },
       );
-
       if (!response.ok) {
         const errorBody = await response.json();
         throw new Error(`Failed to create task: ${errorBody.message}`);
@@ -183,12 +188,14 @@ export const api = {
           },
         },
       );
-
-      if (!response.ok) {
-        const errorBody = await response.json();
-        throw new Error(`Failed to delete task: ${errorBody.message}`);
+      if (response.status === 204) {
+        return { message: "Task successfully deleted" };
       }
-      return response.json();
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Error deleting task");
+      }
+      return data;
     } catch (err) {
       console.error(err.message);
       throw err;
