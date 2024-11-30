@@ -14,15 +14,39 @@ body {
     justify-content: center;
 }
 
+.large-calendar {
+  width: 100%;
+  max-width: 1200px;
+  font-size: 1.2rem;
+  margin: 20px auto;
+}
+
+.calendar-tasks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.calendar-task {
+  background-color: hsl(220, 70%, 50%);
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin-bottom: 2px;
+  font-size: 0.8rem;
+}
+
 
 .container {
-    max-width: 600px;
     width: 100%;
+    max-width: 1200px;
     padding: 1rem;
     margin-top: 4rem;
     transition: margin-left 0.3s ease-in-out;
     position: relative;
 }
+
 
 .clock{
     color: white;
