@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import "../CSS/Sidebar.css";
 
-export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
+export function Sidebar({
+  isOpen,
+  lists,
+  addList,
+  setCurrentList,
+  onToggleCalendar,
+}) {
   const [newListName, setNewListName] = useState("");
 
   function handleAddList() {
@@ -22,6 +28,9 @@ export function Sidebar({ isOpen, lists, addList, setCurrentList }) {
       />
       <button type="button" onClick={handleAddList} className="btn">
         +
+      </button>
+      <button onClick={onToggleCalendar} className="btn">
+        Toggle Calendar
       </button>
       <ul>
         {lists.length === 0 ? (

@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { ToDoForm } from "../Components/ToDoForm.jsx";
 import { TodoList } from "../Components/TodoList.jsx";
 import Sidebar from "../Components/Sidebar.jsx";
+import TaskCalendar from "../Components/Calendar.jsx";
 import Header from "../Components/Header.jsx";
-import Calendar from "react-calendar"; // Add react-calendar import
 import "../CSS/Home.css";
-import "react-calendar/dist/Calendar.css"; // Add react-calendar styles
 import { api } from "../ApiFunctions.jsx";
 
 const Home = () => {
@@ -16,7 +15,7 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [view, setView] = useState("list"); // Add view toggle state
+  const [view, setView] = useState("list");
   const userName = localStorage.getItem("userName");
   const token = localStorage.getItem("token");
 
@@ -138,30 +137,8 @@ const Home = () => {
     }
   };
 
-  // Toggle View
   const toggleView = () => {
     setView((prevView) => (prevView === "list" ? "calendar" : "list"));
-  };
-
-  // Render Tile Content for Calendar
-  const renderTileContent = ({ date }) => {
-    if (!currentList || !lists[currentList]) return null;
-
-    const tasksForDate = lists[currentList].tasks.filter(
-      (task) =>
-        task.dueDate &&
-        new Date(task.dueDate).toDateString() === date.toDateString()
-    );
-
-    return tasksForDate.length > 0 ? (
-      <ul className="calendar-tasks">
-        {tasksForDate.map((task) => (
-          <li key={task.taskID} className="calendar-task">
-            {task.taskName}
-          </li>
-        ))}
-      </ul>
-    ) : null;
   };
 
   if (loading) return <div>Loading...</div>;
@@ -184,20 +161,18 @@ const Home = () => {
         addList={addList}
         setCurrentList={setCurrentList}
         currentList={currentList}
+        onToggleCalendar={toggleView}
       />
-      <div className="container">
-        {currentList && lists[currentList] ? (
-          <>
-            <div className="list-header">
-              <h2 className="text-center">{lists[currentList].name}</h2>
-              <button className="btn toggle-view-btn" onClick={toggleView}>
-                Toggle to {view === "list" ? "Calendar View" : "List View"}
-              </button>
-              <button className="delete-list-btn" onClick={deleteCurrentList}>
-                Delete List
-              </button>
-            </div>
-            {view === "list" ? (
+      {view === "list" ? (
+        <div className="container">
+          {currentList && lists[currentList] ? (
+            <>
+              <div className="list-header">
+                <h2 className="text-center">{lists[currentList].name}</h2>
+                <button className="delete-list-btn" onClick={deleteCurrentList}>
+                  Delete List
+                </button>
+              </div>
               <>
                 <TodoList
                   todos={lists[currentList].tasks}
@@ -206,17 +181,16 @@ const Home = () => {
                 />
                 <ToDoForm onSubmit={addToDo} />
               </>
-            ) : (
-              <Calendar
-                tileContent={renderTileContent}
-                className="large-calendar" // Apply CSS class for larger calendar
-              />
-            )}
-          </>
-        ) : (
-          <p className="no-list-prompt">Create a new list</p>
-        )}
-      </div>
+            </>
+          ) : (
+            <p className="no-list-prompt">Create a new list</p>
+          )}
+        </div>
+      ) : (
+        <div className="large-calendar">
+          <TaskCalendar lists={lists} />
+        </div>
+      )}
     </div>
   );
 };

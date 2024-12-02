@@ -1,3 +1,12 @@
+#root {
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
 /* font and box */
 * {
     font-family: Arial, Helvetica, sans-serif;
@@ -14,39 +23,63 @@ body {
     justify-content: center;
 }
 
-.large-calendar {
-  width: 100%;
-  max-width: 1200px;
-  font-size: 1.2rem;
-  margin: 20px auto;
+.app-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
 }
 
+.react-calendar {
+    width: 100%;
+    height: 100%;
+    display: block;
+    box-sizing: border-box;
+}
+
+
+.large-calendar {
+    width: 90%;
+    max-width: 1400px;
+    font-size: 1.5rem;
+    margin: 30px auto;
+    padding: 1rem;
+    background-color: hsl(231, 20%, 15%);
+    border-radius: 8px;
+}
+
+
 .calendar-tasks {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.9rem;
-  color: white;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: white;
 }
 
 .calendar-task {
-  background-color: hsl(220, 70%, 50%);
-  padding: 2px 5px;
-  border-radius: 3px;
-  margin-bottom: 2px;
-  font-size: 0.8rem;
+    background-color: hsl(220, 70%, 50%);
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    font-size: 0.8rem;
 }
+
+
 
 
 .container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 600px;
     padding: 1rem;
     margin-top: 4rem;
     transition: margin-left 0.3s ease-in-out;
     position: relative;
 }
-
 
 .clock{
     color: white;
