@@ -153,7 +153,7 @@ const Home = () => {
       />
       <Sidebar
         isOpen={isSidebarOpen}
-        // onClose={() => setIsSidebarOpen(false)}
+        onClose={() => setIsSidebarOpen(false)}
         lists={Object.entries(lists).map(([id, list]) => ({
           id,
           name: list.name,
@@ -161,7 +161,7 @@ const Home = () => {
         addList={addList}
         setCurrentList={setCurrentList}
         currentList={currentList}
-        // onToggleCalendar={toggleView}
+        onToggleCalendar={toggleView}
       />
       {view === "list" ? (
         <div className="container">
