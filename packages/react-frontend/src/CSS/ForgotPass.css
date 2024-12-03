@@ -2,31 +2,59 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 50px;
+    margin-top: 80px;
+    padding: 2rem;
+    background: hsl(231, 21%, 18%);
+    border-radius: 15px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    color: hsl(200, 100%, 90%);
 }
 
-.forgot-password-form {
+.forgot-pass h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: hsl(200, 100%, 90%);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.forgot-pass p {
+    font-size: 1.2rem;
+    color: hsl(200, 100%, 80%);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.forgot-pass-form {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 100%;
+    align-items: center;
 }
 
-.forgot-password-form input {
-    margin-bottom: 1rem;
-    padding: 0.5rem;
+.forgot-pass-form input {
+    width: 100%;
+    padding: 0.8rem;
     font-size: 1rem;
-}
-
-.reset-password-btn, .go-back-btn {
-    padding: 0.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    background-color: hsl(215, 28%, 17%);
+    border: 1px solid hsl(215, 28%, 30%);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background-color: hsl(231, 21%, 25%);
     color: hsl(200, 100%, 90%);
-    border: none;
 }
 
-.go-back-btn {
-    background-color: hsl(214, 15%, 54%);
+.reset-pass-btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: hsl(215, 28%, 50%);
+    color: hsl(200, 100%, 95%);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }

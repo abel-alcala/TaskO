@@ -3,20 +3,25 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 50vh;
+  padding: 2rem;
+  background-color: hsl(231, 21%, 18%);
 }
 
 .change-pass h1 {
   font-size: 2.5rem;
   color: #d3d3f5;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .change-pass-form {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 15px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .change-pass-form input[type="password"] {
