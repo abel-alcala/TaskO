@@ -18,6 +18,7 @@ const Home = () => {
   const [view, setView] = useState("list");
   const userName = localStorage.getItem("userName");
   const token = localStorage.getItem("token");
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -141,6 +142,10 @@ const Home = () => {
     setView((prevView) => (prevView === "list" ? "calendar" : "list"));
   };
 
+  const handleSelectTask = (taskId) => {
+    setSelectedTaskId((prevId) => (prevId === taskId ? null : taskId));
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -164,10 +169,10 @@ const Home = () => {
         onToggleCalendar={toggleView}
       />
       {view === "list" ? (
-        <div className="container">
+        <div className="main-container">
           {currentList && lists[currentList] ? (
-            <>
-              <div className="list-header">
+            <div>
+              <div className="list-title">
                 <h2 className="text-center">{lists[currentList].name}</h2>
                 <button className="delete-list-btn" onClick={deleteCurrentList}>
                   Delete List
@@ -178,10 +183,14 @@ const Home = () => {
                   todos={lists[currentList].tasks}
                   toggleToDo={toggleToDo}
                   deleteToDo={deleteToDo}
+                  selectedTaskId={selectedTaskId}
+                  onSelectTask={handleSelectTask}
                 />
-                <ToDoForm onSubmit={addToDo} />
+                <div className="list-header">
+                  <ToDoForm onSubmit={addToDo} />
+                </div>
               </>
-            </>
+            </div>
           ) : (
             <p className="no-list-prompt">Create a new list</p>
           )}

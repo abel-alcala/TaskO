@@ -1,7 +1,6 @@
 import React from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import "../CSS/Home.css";
+import "../CSS/Calendar.css";
 
 export function TaskCalendar({ lists }) {
   const renderTileContent = ({ date }) => {

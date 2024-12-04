@@ -11,23 +11,19 @@ export function TodoTask({
   toggleToDo,
   deleteToDo,
   updateTask,
+  isSelected,
+  onTaskSelect,
 }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [taskNotes, setTaskNotes] = useState(notes || "");
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState([]);
 
   const formattedDueDate = dueDate
     ? new Date(dueDate).toLocaleDateString("en-US", {
-        year: "numeric",
         month: "short",
         day: "numeric",
       })
     : null;
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
 
   const handleNotesChange = (e) => {
     const updatedNotes = e.target.value;
@@ -36,23 +32,25 @@ export function TodoTask({
   };
 
   const handleSubTaskChange = (e) => {
-  setSubTaskInput(e.target.value);
-};
+    setSubTaskInput(e.target.value);
+  };
 
   const addSubTask = () => {
-    if (subTaskInput.trim() === "")
-      return;
+    if (subTaskInput.trim() === "") return;
     const updatedSubTasks = [...subTasks, subTaskInput.trim()];
     setSubTasks(updatedSubTasks);
     setSubTaskInput("");
     updateTask(taskID, { subTasks: updatedSubTasks });
-  }
+  };
 
   return (
     <>
-      <li className={`todo-task ${completed ? "completed" : ""}`}>
+      <li
+        className={`todo-task ${completed ? "completed" : ""} ${isSelected ? "sidebar-active" : ""}`}
+        onClick={onTaskSelect}
+      >
         <div className="task-header">
-          <label className="task-checkbox">
+          <label className="task-checkbox" onClick={(e) => e.stopPropagation()}>
             <input
               type="checkbox"
               checked={completed}
@@ -74,18 +72,21 @@ export function TodoTask({
         )}
 
         <div className="task-actions">
-          <button onClick={() => deleteToDo(taskID)} className="btn btn-danger">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteToDo(taskID);
+            }}
+            className="btn btn-danger"
+          >
             Remove
-          </button>
-          <button onClick={toggleSidebar} className="btn btn-info">
-            Details
           </button>
         </div>
       </li>
 
-      {isSidebarOpen && (
-        <div className="task-details-sidebar">
-          <button className="sidebar-close-btn" onClick={toggleSidebar}>
+      {isSelected && (
+        <div className={`task-details-sidebar ${isSelected ? "show" : ""}`}>
+          <button className="sidebar-close-btn" onClick={onTaskSelect}>
             Close
           </button>
           <h2>{taskName}</h2>
@@ -108,13 +109,13 @@ export function TodoTask({
                 Add
               </button>
             </div>
-              <ul className="subtask-list">
-                {subTasks.map((subTask, index) => (
-                  <li key={index} className="subtask-item">
-                    • {subTask}
-                  </li>
-                ))}
-              </ul>
+            <ul className="subtask-list">
+              {subTasks.map((subTask, index) => (
+                <li key={index} className="subtask-item">
+                  • {subTask}
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="task-notes-section">
             <h3>Notes</h3>

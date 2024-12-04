@@ -29,12 +29,12 @@ export function ToDoForm({ onSubmit }) {
   return (
     <form onSubmit={handleSubmit} className="new-item-form">
       <div className="form-row">
-        <label htmlFor="item">Task Name *</label>
         <input
           value={taskName}
           onChange={(e) => setTaskName(e.target.value)}
           type="text"
           id="item"
+          placeholder="Task Name"
           required
         />
       </div>
