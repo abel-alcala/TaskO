@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../CSS/TaskSidebar.css";
 import { api } from "../ApiFunctions.jsx";
 
@@ -20,6 +20,7 @@ export function TodoTask({
   const [taskNotes, setTaskNotes] = useState(notes || "");
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState([]);
+
   const [editingDueDate, setEditingDueDate] = useState(
     dueDate ? dueDate.split("T")[0] : "",
   );
@@ -27,23 +28,31 @@ export function TodoTask({
     dueDate ? dueDate.split("T")[1]?.substring(0, 5) : "",
   );
 
-  const [formattedDueDate] = useState(
-    dueDate
-      ? new Date(dueDate).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })
-      : null,
-  );
+  const formattedDueDate = useMemo(() => {
+    if (!editingDueDate) return null;
 
-  const [formattedDueTime, setFormattedDueTime] = useState(
-    dueDate
-      ? new Date(dueDate).toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : null,
-  );
+    const fullDateTime = editingDueTime
+      ? `${editingDueDate}T${editingDueTime}:00`
+      : editingDueDate;
+
+    return new Date(fullDateTime).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+    });
+  }, [editingDueDate, editingDueTime]);
+
+  const formattedDueTime = useMemo(() => {
+    if (!editingDueDate) return null;
+
+    const fullDateTime = editingDueTime
+      ? `${editingDueDate}T${editingDueTime}:00`
+      : editingDueDate;
+
+    return new Date(fullDateTime).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }, [editingDueDate, editingDueTime]);
 
   const [isEditingTaskName, setIsEditingTaskName] = useState(false);
   const [editingTaskName, setEditingTaskName] = useState(taskName);
@@ -98,17 +107,6 @@ export function TodoTask({
     setEditingDueTime(updatedTime);
 
     const updatedDueDateTime = `${editingDueDate || new Date().toISOString().split("T")[0]}T${updatedTime}`;
-
-    setFormattedDueTime(
-      updatedTime
-        ? new Date(updatedDueDateTime).toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-          })
-        : null,
-    );
-
-    // Update the API with the new dueDate and dueTime combination
     updateTask(taskID, { dueDate: updatedDueDateTime });
   };
 
