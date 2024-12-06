@@ -5,6 +5,7 @@ export function ToDoForm({ onSubmit }) {
   const [dueDate, setDueDate] = useState("");
   const [notes, setNotes] = useState("");
   const [priority, setPriority] = useState("");
+  const [dueTime, setDueTime] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -40,7 +41,7 @@ export function ToDoForm({ onSubmit }) {
         />
       </div>
       <div className="form-row">
-        <label htmlFor="due-date">Due Date</label>
+        <label htmlFor="due-date">Due Date </label>
         <input
           type="date"
           id="due-date"
@@ -49,7 +50,7 @@ export function ToDoForm({ onSubmit }) {
         />
       </div>
       <div className="form-row">
-        <label htmlFor="due-time">Due Time</label>
+        <label htmlFor="due-time">Time Due </label>
         <input
           type="time"
           id="due-time"

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../CSS/TaskSidebar.css";
+import { api } from "../ApiFunctions.jsx";
 
 export function TodoTask({
   completed,
@@ -13,30 +14,60 @@ export function TodoTask({
   updateTask,
   isSelected,
   onTaskSelect,
+  userName,
+  listId,
 }) {
   const [taskNotes, setTaskNotes] = useState(notes || "");
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState([]);
   const [editingDueDate, setEditingDueDate] = useState(
-    dueDate ? dueDate.split("T")[0] : ""
+    dueDate ? dueDate.split("T")[0] : "",
   );
   const [editingDueTime, setEditingDueTime] = useState(
-    dueDate ? dueDate.split("T")[1]?.substring(0, 5) : ""
+    dueDate ? dueDate.split("T")[1]?.substring(0, 5) : "",
   );
 
-  const formattedDueDate = dueDate
-    ? new Date(dueDate).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-      })
-    : null;
+  const [formattedDueDate, setFormattedDueDate] = useState(
+    dueDate
+      ? new Date(dueDate).toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })
+      : null,
+  );
 
-  const formattedDueTime = dueDate
-    ? new Date(dueDate).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })
-    : null;
+  const [formattedDueTime, setFormattedDueTime] = useState(
+    dueDate
+      ? new Date(dueDate).toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : null,
+  );
+
+  const [isEditingTaskName, setIsEditingTaskName] = useState(false);
+  const [editingTaskName, setEditingTaskName] = useState(taskName);
+
+  const handleTaskNameEdit = () => {
+    setIsEditingTaskName(true);
+  };
+
+  const handleTaskNameChange = (e) => {
+    setEditingTaskName(e.target.value);
+  };
+
+  const saveTaskName = async () => {
+    if (editingTaskName.trim() !== "" && editingTaskName !== taskName) {
+      try {
+        await api.updateTask(userName, listId, taskID, {
+          taskName: editingTaskName,
+        });
+      } catch (error) {
+        console.error("Error updating task name:", error);
+      }
+    }
+    setIsEditingTaskName(false);
+  };
 
   const handleNotesChange = (e) => {
     const updatedNotes = e.target.value;
@@ -58,6 +89,16 @@ export function TodoTask({
   const handleDueDateChange = (e) => {
     const updatedDate = e.target.value;
     setEditingDueDate(updatedDate);
+    setFormattedDueDate(
+      updatedDate
+        ? new Date(
+            `${updatedDate}T${editingDueTime || "00:00"}`,
+          ).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          })
+        : null,
+    );
     const updatedDueDateTime = `${updatedDate}T${editingDueTime || "00:00"}`;
     updateTask(taskID, { dueDate: updatedDueDateTime });
   };
@@ -65,8 +106,38 @@ export function TodoTask({
   const handleDueTimeChange = (e) => {
     const updatedTime = e.target.value;
     setEditingDueTime(updatedTime);
+    setFormattedDueTime(
+      updatedTime
+        ? new Date(
+            `${editingDueDate || "1970-01-01"}T${updatedTime}`,
+          ).toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : null,
+    );
     const updatedDueDateTime = `${editingDueDate || "1970-01-01"}T${updatedTime}`;
     updateTask(taskID, { dueDate: updatedDueDateTime });
+  };
+
+  const handleSidebarClose = async () => {
+    try {
+      const updates = {
+        ...(taskNotes !== notes && { notes: taskNotes }),
+        ...(subTasks.length > 0 && { subTasks }),
+        ...(editingDueDate &&
+          editingDueTime && {
+            dueDate: `${editingDueDate}T${editingDueTime}:00`,
+          }),
+        ...(editingTaskName !== taskName && { taskName: editingTaskName }),
+      };
+      if (Object.keys(updates).length > 0) {
+        await api.updateTask(userName, listId, taskID, updates);
+      }
+      onTaskSelect();
+    } catch (error) {
+      console.error("Error updating task when closing sidebar:", error);
+    }
   };
 
   return (
@@ -84,7 +155,8 @@ export function TodoTask({
               checked={completed}
               onChange={(e) => toggleToDo(taskID, e.target.checked)}
             />
-            <span className="task-name">{taskName}</span>
+
+            <span className="task-name">{editingTaskName}</span>
           </label>
           {priority && (
             <span className={`priority priority-${priority.toLowerCase()}`}>
@@ -93,11 +165,10 @@ export function TodoTask({
           )}
         </div>
 
-        {notes && <p className="task-notes">{notes}</p>}
-
         {formattedDueDate && (
           <div className="task-due-date">
-            Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}
+            Due: {formattedDueDate}{" "}
+            {formattedDueTime && `at ${formattedDueTime}`}
           </div>
         )}
 
@@ -116,10 +187,29 @@ export function TodoTask({
 
       {isSelected && (
         <div className={`task-details-sidebar ${isSelected ? "show" : ""}`}>
-          <button className="sidebar-close-btn" onClick={onTaskSelect}>
+          <button className="sidebar-close-btn" onClick={handleSidebarClose}>
             Close
           </button>
-          <h2>{taskName}</h2>
+          {isEditingTaskName ? (
+            <input
+              type="text"
+              value={editingTaskName}
+              onChange={handleTaskNameChange}
+              onBlur={saveTaskName}
+              className="task-name-edit"
+              autoFocus
+            />
+          ) : (
+            <span className="task-name">{editingTaskName}</span>
+          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleTaskNameEdit();
+            }}
+          >
+            ✏️
+          </button>
 
           <div className="task-details">
             <div className="task-due-date-detail">

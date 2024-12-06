@@ -26,7 +26,7 @@ body {
 
 .app-container {
     width: 100%;
-    max-width: 675px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 1.5rem;
     display: flex;
@@ -42,7 +42,7 @@ body {
 
 .main-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     padding: 1rem;
     transition: margin-left 0.3s ease-in-out;
     position: relative;
