@@ -37,7 +37,7 @@ export function TodoTask({
         minute: "2-digit",
       })
     : null;
-  
+
   const handleNotesChange = (e) => {
     const updatedNotes = e.target.value;
     setTaskNotes(updatedNotes);
@@ -52,7 +52,6 @@ export function TodoTask({
     if (subTaskInput.trim() === "") return;
     const updatedSubTasks = [...subTasks, subTaskInput.trim()];
     setSubTasks(updatedSubTasks);
-    setSubTaskInput("");
     updateTask(taskID, { subTasks: updatedSubTasks });
   };
 
@@ -69,11 +68,13 @@ export function TodoTask({
     const updatedDueDateTime = `${editingDueDate || "1970-01-01"}T${updatedTime}`;
     updateTask(taskID, { dueDate: updatedDueDateTime });
   };
-  
+
   return (
     <>
       <li
-        className={`todo-task ${completed ? "completed" : ""} ${isSelected ? "sidebar-active" : ""}`}
+        className={`todo-task ${completed ? "completed" : ""} ${
+          isSelected ? "sidebar-active" : ""
+        }`}
         onClick={onTaskSelect}
       >
         <div className="task-header">
@@ -95,7 +96,9 @@ export function TodoTask({
         {notes && <p className="task-notes">{notes}</p>}
 
         {formattedDueDate && (
-          <div className="task-due-date">Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}</div>
+          <div className="task-due-date">
+            Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}
+          </div>
         )}
 
         <div className="task-actions">
@@ -117,6 +120,7 @@ export function TodoTask({
             Close
           </button>
           <h2>{taskName}</h2>
+
           <div className="task-details">
             <div className="task-due-date-detail">
               <strong>Due Date:</strong>
@@ -154,6 +158,7 @@ export function TodoTask({
               ))}
             </ul>
           </div>
+
           <div className="task-notes-section">
             <h3>Notes</h3>
             <textarea
