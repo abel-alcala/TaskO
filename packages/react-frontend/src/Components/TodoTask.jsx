@@ -31,6 +31,13 @@ export function TodoTask({
       })
     : null;
 
+  const formattedDueTime = dueDate
+    ? new Date(dueDate).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : null;
+  
   const handleNotesChange = (e) => {
     const updatedNotes = e.target.value;
     setTaskNotes(updatedNotes);
