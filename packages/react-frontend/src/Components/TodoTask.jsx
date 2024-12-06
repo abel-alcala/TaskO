@@ -88,7 +88,7 @@ export function TodoTask({
         {notes && <p className="task-notes">{notes}</p>}
 
         {formattedDueDate && (
-          <div className="task-due-date">Due: {formattedDueDate}</div>
+          <div className="task-due-date">Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}</div>
         )}
 
         <div className="task-actions">
@@ -112,7 +112,17 @@ export function TodoTask({
           <h2>{taskName}</h2>
           <div className="task-details">
             <div className="task-due-date-detail">
-              <strong>Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}
+              <strong>Due Date:</strong>
+              <input
+                type="date"
+                value={editingDueDate}
+                onChange={handleDueDateChange}
+              />
+              <input
+                type="time"
+                value={editingDueTime}
+                onChange={handleDueTimeChange}
+              />
             </div>
           </div>
 
