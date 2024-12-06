@@ -1,12 +1,1 @@
-<<<<<<< HEAD
-# TeamOne
-=======
-Contributing:
-Coding Standards: Name all functions with useful names
-Style Guide: https://airbnb.io/javascript/react/
-Put .env in the .gitignore
-
-Instructions:
-Install ESLint through the website
-Install Prettier through your IDE Plugins
->>>>>>> 7e10db856a32b30c2761f98a57fc3f8a3e45f982
+A task creation website that allows you to log into the website and create your own task. What is unique about our app is that it allows you to create sub task and notes to give your task a description and extra sub tasks. We implemented a notification system that sends out a notification through email that updates the user if a task due date is coming up.
