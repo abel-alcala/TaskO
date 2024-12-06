@@ -112,7 +112,7 @@ export function TodoTask({
           <h2>{taskName}</h2>
           <div className="task-details">
             <div className="task-due-date-detail">
-              <strong>Due Date:</strong> {formattedDueDate || "No due date"}
+              <strong>Due: {formattedDueDate} {formattedDueTime && `at ${formattedDueTime}`}
             </div>
           </div>
 
