@@ -10,7 +10,6 @@ const authenticateUser = (req, res, next) => {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    console.log("No token received");
     res.status(401).end();
   } else {
     jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
@@ -144,6 +143,11 @@ router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
   try {
     const user = await User.findOne({ userName: req.params.userName });
     if (!user) return res.status(404).json({ message: "User not found" });
+    if (!req.body.listID || !req.body.listName) {
+      return res
+        .status(400)
+        .json({ message: "Missing required fields: listID or listName" });
+    }
 
     const list = await List.create({
       ...req.body,
@@ -165,7 +169,6 @@ router.delete(
     try {
       const list = await List.findOneAndDelete({ listID: req.params.listId });
       if (!list) return res.status(404).json({ message: "List not found" });
-
       await User.findByIdAndUpdate(list.createdBy, {
         $pull: { lists: list._id },
       });
