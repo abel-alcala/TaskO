@@ -27,7 +27,7 @@ export function TodoTask({
     dueDate ? dueDate.split("T")[1]?.substring(0, 5) : "",
   );
 
-  const [formattedDueDate, setFormattedDueDate] = useState(
+  const [formattedDueDate] = useState(
     dueDate
       ? new Date(dueDate).toLocaleDateString("en-US", {
           month: "short",
@@ -89,16 +89,6 @@ export function TodoTask({
   const handleDueDateChange = (e) => {
     const updatedDate = e.target.value;
     setEditingDueDate(updatedDate);
-    setFormattedDueDate(
-      updatedDate
-        ? new Date(
-            `${updatedDate}T${editingDueTime || "00:00"}`,
-          ).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          })
-        : null,
-    );
     const updatedDueDateTime = `${updatedDate}T${editingDueTime || "00:00"}`;
     updateTask(taskID, { dueDate: updatedDueDateTime });
   };
@@ -106,17 +96,19 @@ export function TodoTask({
   const handleDueTimeChange = (e) => {
     const updatedTime = e.target.value;
     setEditingDueTime(updatedTime);
+
+    const updatedDueDateTime = `${editingDueDate || new Date().toISOString().split("T")[0]}T${updatedTime}`;
+
     setFormattedDueTime(
       updatedTime
-        ? new Date(
-            `${editingDueDate || "1970-01-01"}T${updatedTime}`,
-          ).toLocaleTimeString("en-US", {
+        ? new Date(updatedDueDateTime).toLocaleTimeString("en-US", {
             hour: "2-digit",
             minute: "2-digit",
           })
         : null,
     );
-    const updatedDueDateTime = `${editingDueDate || "1970-01-01"}T${updatedTime}`;
+
+    // Update the API with the new dueDate and dueTime combination
     updateTask(taskID, { dueDate: updatedDueDateTime });
   };
 
@@ -190,26 +182,29 @@ export function TodoTask({
           <button className="sidebar-close-btn" onClick={handleSidebarClose}>
             Close
           </button>
-          {isEditingTaskName ? (
-            <input
-              type="text"
-              value={editingTaskName}
-              onChange={handleTaskNameChange}
-              onBlur={saveTaskName}
-              className="task-name-edit"
-              autoFocus
-            />
-          ) : (
-            <span className="task-name">{editingTaskName}</span>
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleTaskNameEdit();
-            }}
-          >
-            ✏️
-          </button>
+          <div className="side-name">
+            {isEditingTaskName ? (
+              <input
+                type="text"
+                value={editingTaskName}
+                onChange={handleTaskNameChange}
+                onBlur={saveTaskName}
+                className="task-name-edit"
+                autoFocus
+              />
+            ) : (
+              <span className="task-name">{editingTaskName}</span>
+            )}
+            <button
+              className="btn btn-danger"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTaskNameEdit();
+              }}
+            >
+              ✏️
+            </button>
+          </div>
 
           <div className="task-details">
             <div className="task-due-date-detail">
