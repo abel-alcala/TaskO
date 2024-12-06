@@ -138,6 +138,25 @@ const Home = () => {
     }
   };
 
+  const updateTask = async (taskId, updates) => {
+    if (!currentList || !lists[currentList]) return;
+    try {
+      const updatedTask = await api.updateTask(userName, currentList, taskId, updates);
+      setLists((prevLists) => ({
+        ...prevLists,
+        [currentList]: {
+          ...prevLists[currentList],
+          tasks: prevLists[currentList].tasks.map((task) =>
+            task.taskID === taskId ? updatedTask : task
+          ),
+        },
+      }));
+    } catch (err) {
+      setError(err.message);
+      console.error("Error updating task:", err);
+    }
+  };
+  
   const toggleView = () => {
     setView((prevView) => (prevView === "list" ? "calendar" : "list"));
   };
