@@ -204,6 +204,7 @@ const Home = () => {
                   deleteToDo={deleteToDo}
                   selectedTaskId={selectedTaskId}
                   onSelectTask={handleSelectTask}
+                  updateTask={updateTask}
                 />
                 <div className="list-header">
                   <ToDoForm onSubmit={addToDo} />
