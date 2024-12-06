@@ -13,7 +13,7 @@ export function ToDoForm({ onSubmit }) {
     const taskData = {
       taskName,
       notes: notes || null,
-      dueDate: dueDate ? new Date(dueDate).toISOString() : null,
+      dueDate: dueDate ? `${dueDate}T${dueTime || "00:00"}` : null,
       completed: false,
       remindDate: null,
       priority: priority || null,
@@ -22,6 +22,7 @@ export function ToDoForm({ onSubmit }) {
     onSubmit(taskData);
     setTaskName("");
     setDueDate("");
+    setDueTime("");
     setNotes("");
     setPriority("");
   }
