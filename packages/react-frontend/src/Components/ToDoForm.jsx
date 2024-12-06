@@ -48,6 +48,15 @@ export function ToDoForm({ onSubmit }) {
           onChange={(e) => setDueDate(e.target.value)}
         />
       </div>
+      <div className="form-row">
+        <label htmlFor="due-time">Due Time</label>
+        <input
+          type="time"
+          id="due-time"
+          value={dueTime}
+          onChange={(e) => setDueTime(e.target.value)}
+        />
+      </div>
       <button className="btn">Create Task</button>
     </form>
   );
