@@ -17,6 +17,12 @@ export function TodoTask({
   const [taskNotes, setTaskNotes] = useState(notes || "");
   const [subTaskInput, setSubTaskInput] = useState("");
   const [subTasks, setSubTasks] = useState([]);
+  const [editingDueDate, setEditingDueDate] = useState(
+    dueDate ? dueDate.split("T")[0] : ""
+  );
+  const [editingDueTime, setEditingDueTime] = useState(
+    dueDate ? dueDate.split("T")[1]?.substring(0, 5) : ""
+  );
 
   const formattedDueDate = dueDate
     ? new Date(dueDate).toLocaleDateString("en-US", {
@@ -43,6 +49,20 @@ export function TodoTask({
     updateTask(taskID, { subTasks: updatedSubTasks });
   };
 
+  const handleDueDateChange = (e) => {
+    const updatedDate = e.target.value;
+    setEditingDueDate(updatedDate);
+    const updatedDueDateTime = `${updatedDate}T${editingDueTime || "00:00"}`;
+    updateTask(taskID, { dueDate: updatedDueDateTime });
+  };
+
+  const handleDueTimeChange = (e) => {
+    const updatedTime = e.target.value;
+    setEditingDueTime(updatedTime);
+    const updatedDueDateTime = `${editingDueDate || "1970-01-01"}T${updatedTime}`;
+    updateTask(taskID, { dueDate: updatedDueDateTime });
+  };
+  
   return (
     <>
       <li
