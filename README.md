@@ -1,3 +1,4 @@
+# TaskO
 A task creation website that allows you to log into the website and create your own task. What is unique about our app is that it allows you to create sub task and notes to give your task a description and extra sub tasks. We implemented a notification system that sends out a notification through email that updates the user if a task due date is coming up.
 
 ## Links to Frontend & Backend Azure Websites
