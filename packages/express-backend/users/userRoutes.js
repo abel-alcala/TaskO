@@ -45,7 +45,7 @@ export const generateAccessToken = (username) => {
 
 //login
 router.post("/login", async (req, res) => {
-  try {
+
     const { userName, password } = req.body;
     if (!userName || !password) {
       return res
@@ -60,28 +60,18 @@ router.post("/login", async (req, res) => {
 
     const token = await generateAccessToken(userName);
     res.json({ userName: user.userName, token });
-  } catch (err) {
-    console.error("Error in /login:", err);
-    res.status(500).json({ message: "Internal server error" });
-  }
+
 });
 
 // all users
 router.get("/users", async (req, res) => {
-  try {
     const users = await User.find().select("-password").populate("lists");
     res.json(users);
-  } catch {
-    console.error("Error fetching users:");
-    res.status(500).json({
-      message: "Error fetching users",
-    });
-  }
 });
 
 //createAccount
 router.post("/register", async (req, res) => {
-  try {
+
     const { firstName, lastName, email, userName, password } = req.body;
     if (!email || !userName || !password || !firstName || !lastName) {
       return res.status(400).json({ message: "All fields are required." });
@@ -116,15 +106,12 @@ router.post("/register", async (req, res) => {
       user: userResponse,
       token,
     });
-  } catch (err) {
-    console.error("Error creating user:", err);
-    res.status(500).json({ message: "Error creating user" });
-  }
+
 });
 
 //getList
 router.get("/users/:userName/lists", authenticateUser, async (req, res) => {
-  try {
+
     const user = await User.findOne({ userName: req.params.userName }).populate(
       {
         path: "lists",
@@ -134,14 +121,11 @@ router.get("/users/:userName/lists", authenticateUser, async (req, res) => {
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.json(user.lists || []);
-  } catch {
-    res.status(500).json({ message: "Error fetching lists" });
-  }
 });
 
 //createLists
 router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
-  try {
+
     const user = await User.findOne({ userName: req.params.userName });
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -152,9 +136,6 @@ router.post("/users/:userName/lists", authenticateUser, async (req, res) => {
 
     await User.findByIdAndUpdate(user._id, { $push: { lists: list._id } });
     res.status(201).json(list);
-  } catch {
-    res.status(500).json({ message: "Error creating list" });
-  }
 });
 
 // Delete a list
@@ -162,7 +143,6 @@ router.delete(
   "/users/:userName/lists/:listId",
   authenticateUser,
   async (req, res) => {
-    try {
       const list = await List.findOneAndDelete({ listID: req.params.listId });
       if (!list) return res.status(404).json({ message: "List not found" });
 
@@ -171,9 +151,6 @@ router.delete(
       });
       await Task.deleteMany({ list: list._id });
       res.status(200).json({ message: "List and associated tasks deleted" });
-    } catch {
-      res.status(500).json({ message: "Error deleting list" });
-    }
   },
 );
 
@@ -182,15 +159,11 @@ router.get(
   "/users/:userName/lists/:listId/tasks",
   authenticateUser,
   async (req, res) => {
-    try {
       const list = await List.findOne({ listID: req.params.listId }).populate(
         "tasks",
       );
       if (!list) return res.status(404).json({ message: "List not found" });
       res.json(list.tasks);
-    } catch {
-      res.status(500).json({ message: "Error fetching tasks" });
-    }
   },
 );
 
@@ -199,7 +172,6 @@ router.post(
   "/users/:userName/lists/:listId/tasks",
   authenticateUser,
   async (req, res) => {
-    try {
       const list = await List.findOne({ listID: req.params.listId }).populate(
         "createdBy",
       );
@@ -228,10 +200,6 @@ router.post(
       await list.save();
 
       res.status(201).json(task);
-    } catch (err) {
-      console.error("Error creating task:", err);
-      res.status(500).json({ message: "Internal server error" });
-    }
   },
 );
 
@@ -240,7 +208,6 @@ router.put(
   "/users/:userName/lists/:listId/tasks/:taskId",
   authenticateUser,
   async (req, res) => {
-    try {
       const updates = req.body;
       const task = await Task.findOneAndUpdate(
         { taskID: req.params.taskId },
@@ -249,10 +216,6 @@ router.put(
       );
       if (!task) return res.status(404).json({ message: "Task not found" });
       res.json(task);
-    } catch (err) {
-      console.error("Error updating task:", err);
-      res.status(500).json({ message: "Error updating task" });
-    }
   },
 );
 
@@ -261,15 +224,11 @@ router.delete(
   "/users/:userName/lists/:listId/tasks/:taskId",
   authenticateUser,
   async (req, res) => {
-    try {
       const task = await Task.findOneAndDelete({ taskID: req.params.taskId });
       if (!task) return res.status(404).json({ message: "Task not found" });
 
       await List.findByIdAndUpdate(task.list, { $pull: { tasks: task._id } });
       res.status(200).json({ message: "tasks deleted" });
-    } catch {
-      res.status(500).json({ message: "Error deleting task" });
-    }
   },
 );
 
@@ -278,7 +237,6 @@ router.put(
   "/users/:userName/lists/:listId",
   authenticateUser,
   async (req, res) => {
-    try {
       const list = await List.findOneAndUpdate(
         { listID: req.params.listId },
         req.body,
@@ -286,44 +244,16 @@ router.put(
       );
       if (!list) return res.status(404).json({ message: "List not found" });
       res.json(list);
-    } catch {
-      res.status(500).json({ message: "Error updating list" });
-    }
-  },
-);
-
-//deleteList
-router.delete(
-  "/users/:userName/lists/:listId",
-  authenticateUser,
-  async (req, res) => {
-    try {
-      const list = await List.findOneAndDelete({ listID: req.params.listId });
-      if (!list) return res.status(404).json({ message: "List not found" });
-
-      await User.findByIdAndUpdate(list.createdBy, {
-        $pull: { lists: list._id },
-      });
-
-      await Task.deleteMany({ list: list._id });
-      res.json({ message: "List and associated tasks deleted" });
-    } catch {
-      res.status(500).json({ message: "Error deleting list" });
-    }
   },
 );
 
 // users
 router.get("/users/:userName", authenticateUser, async (req, res) => {
-  try {
     const user = await User.findOne({ userName: req.params.userName })
       .select("-password")
       .populate("lists");
     if (!user) return res.status(404).json({ message: "User not found" });
     res.json(user);
-  } catch {
-    res.status(500).json({ message: "Error fetching user" });
-  }
 });
 
 export default router;

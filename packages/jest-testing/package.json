@@ -4,16 +4,21 @@
   "main": "mongoose.test.js",
   "type": "module",
   "scripts": {
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "jest": {
-    "transform": {}
+    "transform": {},
+    "rootDir": "../",
+    "testEnvironment": "node"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "cross-env": "^7.0.3",
+    "supertest": "^7.0.0"
+  },
+  "devDependencies": {
     "jest": "^29.7.0"
   }
 }
