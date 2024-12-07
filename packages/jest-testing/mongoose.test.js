@@ -7,6 +7,8 @@ import express from "express";
 import request from "supertest";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {jest} from '@jest/globals'
+
 process.env.TOKEN_SECRET = "test_secret";
 
 describe("User Routes", () => {
@@ -92,8 +94,25 @@ describe("User Routes", () => {
         expect(response.body).toHaveProperty("token");
         expect(response.body.userName).toBe("testuser");
       });
-      
 
+      it("should fail login with incorrect username", async () => {
+        const response = await request(app).post("/api/login").send({
+            userName: "wronguser",
+            password: "testpassword",
+            });
+
+        expect(response.statusCode).toBe(401);
+        });
+
+        it("should fail login with no username or password", async () => {
+            const response = await request(app).post("/api/login").send({
+                userName: "",
+                password: "",
+                });
+    
+            expect(response.statusCode).toBe(400);
+            expect(response.body.message).toBe("Username and password are required");
+            });
 
       it("should fail login with incorrect password", async () => {
         const response = await request(app).post("/api/login").send({
@@ -125,6 +144,7 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(201);
         expect(response.body).toHaveProperty("user");
         expect(response.body).toHaveProperty("token");
+        expect(response.body.user.userName).toBe("newuser");
       });
 
       it("should fail registration with existing email", async () => {
@@ -146,7 +166,10 @@ describe("User Routes", () => {
         });
 
         expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBe("All fields are required.");
       });
+
+    
     });
   });
 
@@ -239,7 +262,17 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("List and associated tasks deleted");
       });
+
+      it("should fail deleting a non-existing list", async () => {
+        const response = await request(app)
+          .delete(`/api/users/${testUser.userName}/lists/nonexistent-list`)
+          .set("Authorization", `Bearer ${testToken}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe("List not found");
+      });
     });
+
   });
 
   // Task Routes
@@ -254,8 +287,17 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(200);
         expect(Array.isArray(response.body)).toBe(true);
       });
+
+      it("should fail retrieving list", async () => {
+        const response = await request(app)
+          .get(`/api/users/${testUser.userName}/lists/nonexistent/tasks`)
+          .set("Authorization", `Bearer ${testToken}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe("List not found");
     });
 
+})
     //create new task
     describe("POST /api/users/:userName/lists/:listId/tasks", () => {
       it("should create a new task", async () => {
@@ -272,6 +314,20 @@ describe("User Routes", () => {
 
         expect(response.statusCode).toBe(201);
         expect(response.body.taskName).toBe("New Test Task");
+      });
+
+      it('should throw an error when it is unauthorized', async () => {
+        const response = await request(app)
+          .post(`/api/users/anotheruser/lists/${testList.listID}/tasks`)
+          .set('Authorization', `Bearer ${testToken}`)
+          .send({
+            taskName: 'New Test Task',
+            notes: 'Test notes',
+            priority: 'Medium',
+          });
+    
+        expect(response.statusCode).toBe(403);
+        expect(response.body.message).toBe('Unauthorized to add tasks to this list');
       });
 
       it("should fail creating a new task" , async () => {

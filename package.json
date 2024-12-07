@@ -12,6 +12,9 @@
   "workspaces": [
     "packages/*"
   ],
+  "jest": {
+    "testEnvironment": "node"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
