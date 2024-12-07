@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 import mongoose from "mongoose";
 import { User, List, Task } from "../express-backend/users/userModel.js";
 import userRoutes from "../express-backend/users/userRoutes.js";
