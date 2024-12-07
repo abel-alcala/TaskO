@@ -90,6 +90,8 @@ describe("User Routes", () => {
         expect(response.body).toHaveProperty("token");
         expect(response.body.userName).toBe("testuser");
       });
+      
+
 
       it("should fail login with incorrect password", async () => {
         const response = await request(app).post("/api/login").send({
@@ -271,7 +273,7 @@ describe("User Routes", () => {
       });
     });
 
-    //update  task
+    //update task
     describe("PUT /api/users/:userName/lists/:listId/tasks/:taskId", () => {
       it("should update an existing task", async () => {
         const response = await request(app)
@@ -286,6 +288,20 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.completed).toBe(true);
       });
+
+      it("should fail updating a non-existing task", async () => {
+        const response = await request(app)
+          .put(
+            `/api/users/${testUser.userName}/lists/${testList.listID}/tasks/nonexistent-task`,
+          )
+          .set("Authorization", `Bearer ${testToken}`)
+          .send({
+            completed: true,
+          });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe("Task not found");
+      })
     });
 
     //delete Task
@@ -299,6 +315,17 @@ describe("User Routes", () => {
 
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("tasks deleted");
+      });
+
+      it("should fail deleting an existing task", async () => {
+        const response = await request(app)
+          .delete(
+            `/api/users/${testUser.userName}/lists/${testList.listID}/tasks/nonexistent-task`,
+          )
+          .set("Authorization", `Bearer ${testToken}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.message).toBe("Task not found");
       });
     });
   });
