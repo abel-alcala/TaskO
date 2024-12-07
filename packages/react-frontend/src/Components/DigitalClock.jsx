@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 function DigitalClock() {
   const [time, setTime] = useState(new Date());
-  const [timeZone, setTimeZone] = useState("PST"); // Default timezone
+  const [timeZone, setTimeZone] = useState("America/Los_Angeles"); // Default timezone
 
   useEffect(() => {
     const intervalId = setInterval(() => {

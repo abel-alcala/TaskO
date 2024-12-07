@@ -26,11 +26,8 @@ export function Sidebar({
         value={newListName}
         onChange={(e) => setNewListName(e.target.value)}
       />
-      <button type="button" onClick={handleAddList} className="btn">
+      <button type="button" onClick={handleAddList} className="Add">
         +
-      </button>
-      <button onClick={onToggleCalendar} className="btn">
-        Toggle Calendar
       </button>
       <ul>
         {lists.length === 0 ? (
@@ -45,6 +42,10 @@ export function Sidebar({
           ))
         )}
       </ul>
+      <h2> Calendar</h2>
+      <button onClick={onToggleCalendar} className="btn">
+        Toggle Calendar
+      </button>
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ToDoForm } from "../Components/ToDoForm.jsx";
 import { TodoList } from "../Components/TodoList.jsx";
 import Sidebar from "../Components/Sidebar.jsx";
-import TaskCalendar from "../Components/Calendar.jsx";
 import Header from "../Components/Header.jsx";
 import "../CSS/Home.css";
 import { api } from "../ApiFunctions.jsx";
@@ -18,6 +17,7 @@ const Home = () => {
   const [view, setView] = useState("list");
   const userName = localStorage.getItem("userName");
   const token = localStorage.getItem("token");
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   useEffect(() => {
     if (!token) {
@@ -48,7 +48,7 @@ const Home = () => {
     };
 
     fetchLists();
-  }, [userName, token]);
+  }, [userName, token, currentList]);
 
   const addToDo = async (taskData) => {
     if (!currentList || !lists[currentList]) return;
@@ -137,8 +137,31 @@ const Home = () => {
     }
   };
 
+  const updateTask = async (taskId, updates) => {
+    if (!currentList || !lists[currentList]) return;
+    try {
+      const updatedTask = await api.updateTask(userName, currentList, taskId, updates);
+      setLists((prevLists) => ({
+        ...prevLists,
+        [currentList]: {
+          ...prevLists[currentList],
+          tasks: prevLists[currentList].tasks.map((task) =>
+            task.taskID === taskId ? updatedTask : task
+          ),
+        },
+      }));
+    } catch (err) {
+      setError(err.message);
+      console.error("Error updating task:", err);
+    }
+  };
+  
   const toggleView = () => {
     setView((prevView) => (prevView === "list" ? "calendar" : "list"));
+  };
+
+  const handleSelectTask = (taskId) => {
+    setSelectedTaskId((prevId) => (prevId === taskId ? null : taskId));
   };
 
   if (loading) return <div>Loading...</div>;
@@ -161,13 +184,12 @@ const Home = () => {
         addList={addList}
         setCurrentList={setCurrentList}
         currentList={currentList}
-        onToggleCalendar={toggleView}
       />
       {view === "list" ? (
-        <div className="container">
+        <div className="main-container">
           {currentList && lists[currentList] ? (
-            <>
-              <div className="list-header">
+            <div>
+              <div className="list-title">
                 <h2 className="text-center">{lists[currentList].name}</h2>
                 <button className="delete-list-btn" onClick={deleteCurrentList}>
                   Delete List
@@ -178,18 +200,20 @@ const Home = () => {
                   todos={lists[currentList].tasks}
                   toggleToDo={toggleToDo}
                   deleteToDo={deleteToDo}
+                  selectedTaskId={selectedTaskId}
+                  onSelectTask={handleSelectTask}
+                  updateTask={updateTask}
                 />
-                <ToDoForm onSubmit={addToDo} />
+                <div className="list-header">
+                  <ToDoForm onSubmit={addToDo} />
+                </div>
               </>
-            </>
+            </div>
           ) : (
             <p className="no-list-prompt">Create a new list</p>
           )}
         </div>
       ) : (
-        <div className="large-calendar">
-          <TaskCalendar lists={lists} />
-        </div>
       )}
     </div>
   );
