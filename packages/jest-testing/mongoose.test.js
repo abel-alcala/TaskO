@@ -273,6 +273,46 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(201);
         expect(response.body.taskName).toBe("New Test Task");
       });
+
+      it("should fail creating a new task" , async () => {
+        const response = await request(app)
+          .post(
+            `/api/users/${testUser.userName}/lists/fake/tasks`,
+          )
+          .set("Authorization", `Bearer ${testToken}`)
+          .send({
+            taskName: "New Test Task",
+          });
+
+        expect(response.statusCode).toBe(404);
+      })
+
+            it("should fail creating a new task" , async () => {
+        const response = await request(app)
+          .post(
+            `/api/users/${testUser.userName}/lists/${testList.listID}/tasks`,
+          )
+          .set("Authorization", `Bearer different`)
+          .send({
+            taskName: "New Test Task",
+          });
+
+        expect(response.statusCode).toBe(401);
+      })
+
+      it("should create a new task" , async () => {
+        const response = await request(app)
+          .post(
+            `/api/users/${testUser.userName}/lists/${testList.listID}/tasks`,
+          )
+          .set("Authorization", `Bearer ${testToken}`)
+          .send({
+            taskName: "New Test Task",
+          });
+
+        expect(response.statusCode).toBe(201);
+      })
+
     });
 
     //update task

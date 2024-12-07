@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.23% </span>
+                <span class="strong">75.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>104/142</span>
+                <span class='fraction'>107/142</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.84% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>48/65</span>
+                <span class='fraction'>52/65</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.27% </span>
+                <span class="strong">78.78% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>102/132</span>
+                <span class='fraction'>104/132</span>
             </div>
         
             
@@ -403,19 +403,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -599,21 +599,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -624,10 +624,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -745,9 +745,9 @@ const authenticateUser = (req, res, next) =&gt; {
       if (decoded) {
         req.body["userName"] = decoded.userName;
         next();
-      } else <span class="missing-if-branch" title="else path not taken" >E</span>{
-<span class="cstat-no" title="statement not covered" >        console.log("JWT error:", error);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(401).end();</span>
+      } else {
+        console.log("JWT error:", error);
+        res.status(401).end();
       }
     });
   }
@@ -935,7 +935,7 @@ router.post(
       const list = await List.findOne({ listID: req.params.listId }).populate(
         "createdBy",
       );
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (!list) <span class="cstat-no" title="statement not covered" >return res.status(404).json({ message: "List not found" });</span>
+      if (!list) return res.status(404).json({ message: "List not found" });
 &nbsp;
       <span class="missing-if-branch" title="if path not taken" >I</span>if (list.createdBy.userName !== req.params.userName) {
 <span class="cstat-no" title="statement not covered" >        return res</span>
@@ -947,11 +947,11 @@ router.post(
         req.body;
       const task = await Task.create({
         taskName,
-        notes: notes || <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
+        notes: notes || null,
         dueDate: dueDate || null,
         completed: completed || false,
         remindDate: remindDate || null,
-        priority: priority || <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
+        priority: priority || null,
         taskID: crypto.randomUUID(),
         list: list._id,
       });
@@ -1066,7 +1066,7 @@ export default router;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-07T02:49:31.363Z
+                at 2024-12-07T03:11:40.089Z
             </div>
         <script src="prettify.js"></script>
         <script>
