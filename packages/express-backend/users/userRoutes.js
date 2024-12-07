@@ -247,23 +247,6 @@ router.put(
   },
 );
 
-//deleteList
-router.delete(
-  "/users/:userName/lists/:listId",
-  authenticateUser,
-  async (req, res) => {
-      const list = await List.findOneAndDelete({ listID: req.params.listId });
-      if (!list) return res.status(404).json({ message: "List not found" });
-
-      await User.findByIdAndUpdate(list.createdBy, {
-        $pull: { lists: list._id },
-      });
-
-      await Task.deleteMany({ list: list._id });
-      res.json({ message: "List and associated tasks deleted" });
-  },
-);
-
 // users
 router.get("/users/:userName", authenticateUser, async (req, res) => {
     const user = await User.findOne({ userName: req.params.userName })
