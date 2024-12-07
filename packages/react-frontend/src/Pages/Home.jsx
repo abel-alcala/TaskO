@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ToDoForm } from "../Components/ToDoForm.jsx";
 import { TodoList } from "../Components/TodoList.jsx";
 import Sidebar from "../Components/Sidebar.jsx";
+import TaskCalendar from "../Components/Calendar.jsx";
 import Header from "../Components/Header.jsx";
 import "../CSS/Home.css";
 import { api } from "../ApiFunctions.jsx";
@@ -184,6 +185,7 @@ const Home = () => {
         addList={addList}
         setCurrentList={setCurrentList}
         currentList={currentList}
+        onToggleCalendar={toggleView}
       />
       {view === "list" ? (
         <div className="main-container">
@@ -214,6 +216,9 @@ const Home = () => {
           )}
         </div>
       ) : (
+        <div className="large-calendar">
+          <TaskCalendar lists={lists} />
+        </div>
       )}
     </div>
   );
