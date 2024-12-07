@@ -2,12 +2,13 @@
 
 import mongoose from "mongoose";
 import { User, List, Task } from "../express-backend/users/userModel.js";
+import { generateAccessToken } from "express-backend/users/userRoutes.js";
 import userRoutes from "../express-backend/users/userRoutes.js";
 import express from "express";
 import request from "supertest";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {jest} from '@jest/globals'
+import { jest } from "@jest/globals";
 
 process.env.TOKEN_SECRET = "test_secret";
 
@@ -97,22 +98,24 @@ describe("User Routes", () => {
 
       it("should fail login with incorrect username", async () => {
         const response = await request(app).post("/api/login").send({
-            userName: "wronguser",
-            password: "testpassword",
-            });
-
-        expect(response.statusCode).toBe(401);
+          userName: "wronguser",
+          password: "testpassword",
         });
 
-        it("should fail login with no username or password", async () => {
-            const response = await request(app).post("/api/login").send({
-                userName: "",
-                password: "",
-                });
-    
-            expect(response.statusCode).toBe(400);
-            expect(response.body.message).toBe("Username and password are required");
-            });
+        expect(response.statusCode).toBe(401);
+      });
+
+      it("should fail login with no username or password", async () => {
+        const response = await request(app).post("/api/login").send({
+          userName: "",
+          password: "",
+        });
+
+        expect(response.statusCode).toBe(400);
+        expect(response.body.message).toBe(
+          "Username and password are required",
+        );
+      });
 
       it("should fail login with incorrect password", async () => {
         const response = await request(app).post("/api/login").send({
@@ -168,8 +171,6 @@ describe("User Routes", () => {
         expect(response.statusCode).toBe(400);
         expect(response.body.message).toBe("All fields are required.");
       });
-
-    
     });
   });
 
@@ -272,7 +273,6 @@ describe("User Routes", () => {
         expect(response.body.message).toBe("List not found");
       });
     });
-
   });
 
   // Task Routes
@@ -295,9 +295,8 @@ describe("User Routes", () => {
 
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe("List not found");
+      });
     });
-
-})
     //create new task
     describe("POST /api/users/:userName/lists/:listId/tasks", () => {
       it("should create a new task", async () => {
@@ -316,34 +315,34 @@ describe("User Routes", () => {
         expect(response.body.taskName).toBe("New Test Task");
       });
 
-      it('should throw an error when it is unauthorized', async () => {
+      it("should throw an error when it is unauthorized", async () => {
         const response = await request(app)
           .post(`/api/users/anotheruser/lists/${testList.listID}/tasks`)
-          .set('Authorization', `Bearer ${testToken}`)
+          .set("Authorization", `Bearer ${testToken}`)
           .send({
-            taskName: 'New Test Task',
-            notes: 'Test notes',
-            priority: 'Medium',
+            taskName: "New Test Task",
+            notes: "Test notes",
+            priority: "Medium",
           });
-    
+
         expect(response.statusCode).toBe(403);
-        expect(response.body.message).toBe('Unauthorized to add tasks to this list');
+        expect(response.body.message).toBe(
+          "Unauthorized to add tasks to this list",
+        );
       });
 
-      it("should fail creating a new task" , async () => {
+      it("should fail creating a new task", async () => {
         const response = await request(app)
-          .post(
-            `/api/users/${testUser.userName}/lists/fake/tasks`,
-          )
+          .post(`/api/users/${testUser.userName}/lists/fake/tasks`)
           .set("Authorization", `Bearer ${testToken}`)
           .send({
             taskName: "New Test Task",
           });
 
         expect(response.statusCode).toBe(404);
-      })
+      });
 
-            it("should fail creating a new task" , async () => {
+      it("should fail creating a new task", async () => {
         const response = await request(app)
           .post(
             `/api/users/${testUser.userName}/lists/${testList.listID}/tasks`,
@@ -354,9 +353,9 @@ describe("User Routes", () => {
           });
 
         expect(response.statusCode).toBe(401);
-      })
+      });
 
-      it("should create a new task" , async () => {
+      it("should create a new task", async () => {
         const response = await request(app)
           .post(
             `/api/users/${testUser.userName}/lists/${testList.listID}/tasks`,
@@ -367,8 +366,7 @@ describe("User Routes", () => {
           });
 
         expect(response.statusCode).toBe(201);
-      })
-
+      });
     });
 
     //update task
@@ -399,7 +397,7 @@ describe("User Routes", () => {
 
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe("Task not found");
-      })
+      });
     });
 
     //delete Task
@@ -424,6 +422,40 @@ describe("User Routes", () => {
 
         expect(response.statusCode).toBe(404);
         expect(response.body.message).toBe("Task not found");
+      });
+    });
+
+    describe("generateAccessToken", () => {
+      it("should generate a token successfully", async () => {
+        const username = "testuser";
+        const token = "test-token";
+
+        jest
+          .spyOn(jwt, "sign")
+          .mockImplementation((payload, secret, options, callback) => {
+            callback(null, token); // Simulate successful token generation
+          });
+
+        await expect(generateAccessToken(username)).resolves.toBe(token);
+
+        jest.restoreAllMocks();
+      });
+
+      it("should handle errors during token generation", async () => {
+        const username = "testuser";
+        const errorMessage = "Error generating token";
+
+        jest
+          .spyOn(jwt, "sign")
+          .mockImplementation((payload, secret, options, callback) => {
+            callback(new Error(errorMessage), null); // Simulate an error
+          });
+
+        await expect(generateAccessToken(username)).rejects.toThrow(
+          errorMessage,
+        );
+
+        jest.restoreAllMocks();
       });
     });
   });
